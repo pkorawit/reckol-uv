@@ -44,7 +44,7 @@ export default {
       tab: "home",
       screen: ""
     };
-  },
+  },  
   mounted() {
     this.screen = this.$q.screen.name;
     console.log("screen", this.screen);
