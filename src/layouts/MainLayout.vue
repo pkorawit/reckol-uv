@@ -1,11 +1,9 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header class="bg-primary text-white">
+    <q-header class="bg-white text-black">
       <q-toolbar>
         <q-toolbar-title>
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg" />
-          </q-avatar> Smart UV Locker
+            <img class="toolbar_logo" src="../assets/icon2.png" />
         </q-toolbar-title>
 
         <q-btn dense flat round icon="face" @click="right = !right" />
@@ -16,13 +14,13 @@
       <!-- drawer content -->
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="bg-blue-grey-2 text-black">
       <router-view />
     </q-page-container>
-    <q-footer v-if="screen == 'xs'" class="bg-primary">
+    <q-footer v-if="screen == 'xs'" class="bg-white">
       <q-tabs
         no-caps
-        active-color="white"
+        active-color="teal"
         indicator-color="transparent"
         class="text-grey-10"
         v-model="tab"
@@ -51,3 +49,9 @@ export default {
   }
 };
 </script>
+<style lang="stylus" scoped>
+.toolbar_logo {
+  height : 30px;
+  padding-top : 5px;
+}
+</style>

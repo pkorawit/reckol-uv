@@ -1,5 +1,44 @@
 <template>
-  <q-page>
+  <q-page class="q-pa-sm">
+
+    <q-card class="my-card q-mt-sm">
+      <img src="https://cdn.quasar.dev/img/mountains.jpg">
+      <q-card-actions align="right">
+        <q-btn flat round color="red" icon="favorite" />
+        <q-btn flat round color="teal" icon="bookmark" />
+        <q-btn flat round color="primary" icon="share" />
+      </q-card-actions>
+    </q-card>
+
+    <q-card class="my-card q-mt-sm">
+      <img src="https://cdn.quasar.dev/img/mountains.jpg">
+      <q-card-actions align="right">
+        <q-btn flat round color="red" icon="favorite" />
+        <q-btn flat round color="teal" icon="bookmark" />
+        <q-btn flat round color="primary" icon="share" />
+      </q-card-actions>
+    </q-card>
+
+
+    <q-card class="my-card q-mt-sm">
+      <img src="https://cdn.quasar.dev/img/mountains.jpg">
+      <q-card-actions align="right">
+        <q-btn flat round color="red" icon="favorite" />
+        <q-btn flat round color="teal" icon="bookmark" />
+        <q-btn flat round color="primary" icon="share" />
+      </q-card-actions>
+    </q-card>
+
+
+    <q-card class="my-card">
+      <img src="https://cdn.quasar.dev/img/mountains.jpg">
+      <q-card-actions align="right">
+        <q-btn flat round color="red" icon="favorite" />
+        <q-btn flat round color="teal" icon="bookmark" />
+        <q-btn flat round color="primary" icon="share" />
+      </q-card-actions>
+    </q-card>
+
     <div class="row text-center q-ma-md">
       <div class="col text-h5">Locker L1</div>
       <div class="col">
