@@ -1,6 +1,6 @@
-export const clearRentalBox = state => state.box = {}
+export const clearRentalBox = state => state.selectedBox = {}
 
-export const setRentalBox = (state, payload) => state.box = payload
+export const setRentalBox = (state, payload) => state.selectedBox = payload
 
 export const setRentalPassword = (state, payload) => state.password = payload
 

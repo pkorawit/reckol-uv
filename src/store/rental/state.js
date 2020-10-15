@@ -3,6 +3,6 @@ export default function () {
     selectedBox: {},
     password: '',
     result: null,
-    step: null
+    step: 'Box',
   }
 }
