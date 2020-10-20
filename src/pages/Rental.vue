@@ -3,7 +3,7 @@
     <component
       :is="step"
       :box="box"
-      @decoded="onDecoded"
+      @decode="onDecoded"
       @back="onBack"
       @confirm="onConfirm"
       @rent="onRent"
@@ -12,12 +12,16 @@
       v-if="step !== 'QrcodeStream'"
       class="text-center q-mt-md text-h5"
       style="text-decoration: underline; color: blue"
-     
     >
-      <div v-if="step === 'Box' || step === 'PasswordForm'"  @click="toPreviousPage">
+      <div
+        v-if="step === 'Box' || step === 'PasswordForm'"
+        @click="toPreviousPage"
+      >
         < Back to previous page
       </div>
-      <div v-if="step === 'RentalResult'">View my locker</div  @click="toMyLocker">
+      <div v-if="step === 'RentalResult'" @click="toMyLocker">
+        View my locker
+      </div>
     </div>
   </div>
 </template>
@@ -26,6 +30,7 @@
 import Box from "../components/Box.vue";
 import { QrcodeStream } from "vue-qrcode-reader";
 import PasswordForm from "../components/PasswordForm.vue";
+import { Notify } from "quasar";
 
 export default {
   name: "RentalPage",
@@ -57,7 +62,8 @@ export default {
   methods: {
     onDecoded(boxId) {
       this.step = "Box";
-      this.$store.dispatch("getBox", boxId);
+      Notify.create(boxId);
+      this.$store.dispatch("rental/getBox", boxId);
     },
     onBack() {
       this.step = "QrcodeStream";
@@ -94,5 +100,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
