@@ -1,6 +1,46 @@
 <template>
-  <div class="body">
-    <div class="card"></div>
+  <div class="column justify-between">
+    <div class="about-section ">
+      <p>lorem</p>
+      <p class="">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates,
+        velit? Doloribus numquam quia debitis ut tempora est accusantium
+        inventore quod. Officiis quibusdam animi aliquam, quod nam totam beatae
+        assumenda ex!
+      </p>
+    </div>
+
+    <q-card class="box">
+      <q-card-section>
+        <div v-for="index in 10" :key="index">
+          <component
+            :is="step"
+            :box="box"
+            @decode="onDecoded"
+            @back="onBack"
+            @confirm="onConfirm"
+            @rent="onRent"
+            class="element"
+          ></component>
+        </div>
+      </q-card-section>
+    </q-card>
+
+    <div
+      v-if="step !== 'QrcodeStream'"
+      class="text-center q-mt-md text-h5"
+      style="text-decoration: underline; color: blue"
+    >
+      <div
+        v-if="step === 'Box' || step === 'PasswordForm'"
+        @click="toPreviousPage"
+      >
+        < Back to previous page
+      </div>
+      <div v-if="step === 'RentalResult'" @click="toMyLocker">
+        View my locker
+      </div>
+    </div>
   </div>
 </template>
 
@@ -15,7 +55,7 @@ export default {
   components: {
     QrcodeStream,
     Box,
-    PasswordForm,
+    PasswordForm
   },
   computed: {
     step: {
@@ -24,18 +64,18 @@ export default {
       },
       set(val) {
         this.$store.commit("rental/setRentalStep", val);
-      },
+      }
     },
     box: {
       get() {
         return this.$store.state.rental.selectedBox;
-      },
+      }
     },
     rentalResult: {
       get() {
         return this.$store.state.rental.result;
-      },
-    },
+      }
+    }
   },
   methods: {
     onDecoded(boxId) {
@@ -70,40 +110,58 @@ export default {
     },
     toMyLocker() {
       this.$router.push("/my-locker");
-    },
+    }
   },
   mounted() {
     this.$store.dispatch("rental/getBox", "");
-  },
+  }
 };
 </script>
 
-<style lang="scss">
-.body {
-  margin: 0px 0px 0px 0px;
-  padding: 5px;
-  height: 100vh;
-  width: 100vw;
-}
-
-.card {
-  border: 0px solid black;
-  height: 20%;
-  width: 100%;
+<style lang="scss" scoped>
+.box {
   position: absolute;
-  bottom: 0;
+  padding: 0;
+
+  // margin: 0;
+  top: 100%;
   left: 0;
-  border-radius: 50px 50px 0 0;
-  background: linear-gradient(
-    rgba(115, 150, 255, 0.452),
-    rgba(230, 185, 255, 0.479)
-  );
-  transition: ease-in-out 0.2s;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  margin-top: 60%;
+  overflow-y: hidden;
+  border-radius: 50px 50px 0px 0px;
+  /* This timing applies on the way OUT */
+  transition-timing-function: ease-in-out;
+
+  /* Quick on the way out */
+  transition: 0.2s;
 
   &:hover {
-    height: 80%;
-    transform: scaleX(1.5);
-    background: linear-gradient(rgb(115, 150, 255), rgb(230, 185, 255));
+    margin: 0;
+    top: 20%;
+    height: 80vh;
+    overflow-y: scroll;
+    animation: Span 0.5s;
+  }
+}
+.element {
+  margin: 20px;
+}
+.about-section {
+}
+
+@keyframes Span {
+  from {
+    margin-top: 60%;
+    top: 100%;
+    height: 100%;
+  }
+  to {
+    margin-top: 0;
+    top: 20%;
+    height: 80vh;
   }
 }
 </style>
