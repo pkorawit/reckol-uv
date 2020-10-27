@@ -2,7 +2,7 @@
   <q-footer v-if="screen == 'xs'" class="bg-grey-10">
     <div>
       <div class="absolute ss">
-        <q-btn icon="my_location" dense to="/qr">
+        <q-btn flat icon="my_location" class="absolute btn" dense>
           <span class="qr"></span>
         </q-btn>
       </div>
@@ -54,15 +54,20 @@ export default {
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  transform: rotate(45deg);
   filter: drop-shadow(0px 0px 3px #455484);
   background-color: white;
   z-index: -1;
 }
 .ss {
-  /* margin-top: 40px; */
+  position: fixed;
+
   color: #455484;
   left: calc(50vw - 8px);
   z-index: 1;
+}
+.btn {
+  position: absolute;
+
+  bottom: 5px;
 }
 </style>
