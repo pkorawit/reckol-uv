@@ -1,18 +1,31 @@
 <template>
-  <div class="column justify-between">
+  <div class="column justify-between rental">
     <div class="about-section ">
-      <p>lorem</p>
-      <p class="">
+      <p class="text-h6">About</p>
+      <p class="text-center">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates,
         velit? Doloribus numquam quia debitis ut tempora est accusantium
         inventore quod. Officiis quibusdam animi aliquam, quod nam totam beatae
         assumenda ex!
       </p>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero, quos
+        culpa! Facere voluptate repellendus error quibusdam omnis quis nulla
+        nostrum necessitatibus ad ipsum eos quia rerum aliquid, reprehenderit
+        sed amet.
+      </p>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa,
+        voluptatibus et soluta velit amet voluptatem reprehenderit quae a, ipsa
+        ad autem reiciendis ratione ea suscipit! Voluptas fugit alias quae
+        adipisci?
+      </p>
     </div>
 
     <q-card class="box">
       <q-card-section>
-        <div v-for="index in 10" :key="index">
+        <p class="text-h6">Your Locker</p>
+        <div v-for="index in 2" :key="index">
           <component
             :is="step"
             :box="box"
@@ -119,28 +132,38 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.rental {
+  background: #1f2865;
+  color: white;
+}
 .box {
   position: absolute;
   padding: 0;
-
+  background: #eeecec;
+  color: black;
   // margin: 0;
   top: 100%;
   left: 0;
   bottom: 0;
   width: 100%;
   height: 100%;
-  margin-top: 60%;
+  margin-top: 10%;
   overflow-y: hidden;
   border-radius: 50px 50px 0px 0px;
   /* This timing applies on the way OUT */
   transition-timing-function: ease-in-out;
+
+  component,
+  &:nth-child(1) {
+    top: 40%;
+  }
 
   /* Quick on the way out */
   transition: 0.2s;
 
   &:hover {
     margin: 0;
-    top: 20%;
+    top: 10%;
     height: 80vh;
     overflow-y: scroll;
     animation: Span 0.5s;
@@ -152,16 +175,46 @@ export default {
 .about-section {
 }
 
-@keyframes Span {
-  from {
-    margin-top: 60%;
-    top: 100%;
-    height: 100%;
-  }
-  to {
-    margin-top: 0;
-    top: 20%;
-    height: 80vh;
+@mixin test($child) {
+  @if ($child == 0) {
+    @keyframes Span {
+      from {
+        margin-top: 10%;
+        top: 100%;
+        height: 100%;
+      }
+      to {
+        margin-top: 0;
+        top: 10%;
+        height: 80vh;
+      }
+    }
+  } @else if($child ==1) {
+    @keyframes Span {
+      from {
+        margin-top: 10%;
+        top: 100%;
+        height: 100%;
+      }
+      to {
+        margin-top: 0;
+        top: 10%;
+        height: 80vh;
+      }
+    }
+  } @else if($child >=2) {
+    @keyframes Span {
+      from {
+        margin-top: 10%;
+        top: 100%;
+        height: 100%;
+      }
+      to {
+        margin-top: 0;
+        top: 10%;
+        height: 80vh;
+      }
+    }
   }
 }
 </style>

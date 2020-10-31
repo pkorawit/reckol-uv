@@ -36,7 +36,7 @@ export default {
   overflow-y: hidden;
   // margin-top: 50px 0px 30px;
   border-radius: 50px 50px 0px 0px;
-  background: rgb(60, 63, 201);
+  background: #1f2865;
 }
 .header {
   height: 10vh;

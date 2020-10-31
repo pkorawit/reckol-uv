@@ -1,12 +1,12 @@
 <template>
-  <q-footer v-if="screen == 'xs'" class="bg-grey-10">
+  <q-footer v-if="screen == 'xs'" class="footer-color">
     <div>
       <div class="absolute ss">
         <q-btn flat icon="my_location" class="absolute btn" dense>
           <span class="qr"></span>
         </q-btn>
       </div>
-      <q-card flat class=" absolute-bottom bg-grey-10">
+      <q-card flat class=" absolute-bottom footer-color">
         <q-card-section class="full-width full-height ">
           <div class="row justify-center justify-around items-center">
             <q-btn dense flat text-color="white" icon="home" to="/"></q-btn>
@@ -69,5 +69,8 @@ export default {
   position: absolute;
 
   bottom: 5px;
+}
+.footer-color {
+  background: #1f2865;
 }
 </style>
