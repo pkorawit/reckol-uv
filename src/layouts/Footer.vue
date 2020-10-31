@@ -2,7 +2,7 @@
   <q-footer v-if="screen == 'xs'" class="footer-color">
     <div>
       <div class="absolute ss">
-        <q-btn flat icon="my_location" class="absolute btn" dense>
+        <q-btn flat icon="my_location" class="absolute btn" dense to="/scanner">
           <span class="qr"></span>
         </q-btn>
       </div>

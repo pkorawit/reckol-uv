@@ -38,7 +38,7 @@
         </div>
       </q-card-section>
     </q-card>
-
+    <!-- 
     <div
       v-if="step !== 'QrcodeStream'"
       class="text-center q-mt-md text-h5"
@@ -53,7 +53,7 @@
       <div v-if="step === 'RentalResult'" @click="toMyLocker">
         View my locker
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
