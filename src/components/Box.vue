@@ -23,6 +23,7 @@
                 mask="###-###-####"
                 hint="* input the number"
                 v-model="tel"
+                autofocus
               ></q-input>
             </div>
           </div>
@@ -81,11 +82,11 @@ export default {
       sending: false
     };
   },
-  mounted(props) {
+  mounted() {
     // console.log(this.$props.box.status);
-    this.$props.box.status == "Available"
-      ? (this.sendPassword = "Send Password")
-      : (this.sendPassword = "Unlock");
+    if (this.$props.box.status == "Available") {
+      this.sendPassword = "Send Password";
+    }
   },
 
   methods: {
@@ -122,8 +123,8 @@ export default {
   },
   watch: {
     // whenever question changes, this function will run
-    tel: function(newQuestion, oldQuestion) {
-      newQuestion.length == 12 ? (this.sendPassword = "Confirm") : "";
+    tel: function(newInput, oldInput) {
+      newInput.length == 12 ? (this.sendPassword = "Confirm") : "";
       // this.answer = 'Waiting for you to stop typing...'
       // this.debouncedGetAnswer()
     }
