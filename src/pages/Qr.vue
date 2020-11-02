@@ -10,7 +10,7 @@
       </div>
     </div>
     <div v-else-if="decode && !passwordSet">
-      <password-form title="Set Password" />
+      <password-form title="Set Password" @confirmPassword="confirmPassword" />
     </div>
     <div v-else-if="decode && passwordSet">
       <success title="Success" />
@@ -33,12 +33,19 @@ export default {
   data() {
     return {
       decode: true,
-      passwordSet: true
+      passwordSet: false
     };
   },
   methods: {
     onDecode(code) {
-      this.$emit("decoded", code);
+      // alert(code);
+      // Notify.create(code);
+      this.decode = true;
+      // this.$store.dispatch("rental/getBox", boxId);
+    },
+    confirmPassword(val) {
+      console.log(val);
+      this.passwordSet = val;
     }
   }
 };

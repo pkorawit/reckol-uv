@@ -25,7 +25,7 @@
     <q-card class="box">
       <q-card-section>
         <p class="text-h6">Your Locker</p>
-        <div v-for="index in 2" :key="index">
+        <div v-for="index in 0" :key="index">
           <component
             :is="step"
             :box="box"
@@ -135,19 +135,21 @@ export default {
 .rental {
   background: #1f2865;
   color: white;
+  padding: 15px;
 }
 .box {
   position: absolute;
-  padding: 0;
+  padding: 15px;
   background: #eeecec;
   color: black;
   // margin: 0;
-  top: 100%;
-  left: 0;
-  bottom: 0;
+  // top: 100%;
+  left: 50%;
+  // bottom: 5vh;
+  transform: translate(-50%, 80%);
   width: 100%;
   height: 100%;
-  margin-top: 10%;
+  // margin-top: 10%;
   overflow-y: hidden;
   border-radius: 50px 50px 0px 0px;
   /* This timing applies on the way OUT */
@@ -162,11 +164,12 @@ export default {
   transition: 0.2s;
 
   &:hover {
-    margin: 0;
-    top: 10%;
+    margin-top: 10%;
+    // top: 10%;
     height: 80vh;
     overflow-y: scroll;
     animation: Span 0.5s;
+    transform: translate(-50%, 0%);
   }
 }
 .element {

@@ -49,11 +49,12 @@
             <q-input
               type="password"
               style="display:inline-block;text-align:center;"
+              v-model="input1"
             ></q-input>
           </div>
 
           <div class="q-ma-md">
-            <q-btn color="primary">Confirm</q-btn>
+            <q-btn color="primary" @click="confirmPassword">Confirm</q-btn>
           </div>
         </div>
       </q-card-section>
@@ -72,10 +73,10 @@ export default {
   },
   data() {
     return {
-      input1: "",
-      input2: "",
-      input3: "",
-      input4: ""
+      input1: ""
+      // input2: "",
+      // input3: "",
+      // input4: ""
     };
   },
   methods: {
@@ -84,6 +85,12 @@ export default {
     },
     log(val) {
       console.log(val);
+    },
+    confirmPassword() {
+      // console.log(this.input1);
+
+      // api state
+      this.input1 == "" ? "" : this.$emit("confirmPassword", true);
     },
     toInput(input) {
       const temp = [this.input1, this.input2, this.input3, this.input4];

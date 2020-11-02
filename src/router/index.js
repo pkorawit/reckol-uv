@@ -1,3 +1,4 @@
+import { route } from 'quasar/wrappers'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
@@ -24,6 +25,15 @@ export default function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> publicPath
     mode: process.env.VUE_ROUTER_MODE,
     base: process.env.VUE_ROUTER_BASE
+  })
+
+  Router.beforeEach((to,from,next)=>{
+    console.log(to);
+    let login = localStorage.getItem('isLogin')
+    if (to.name !== 'Login' && !login) next({ name: 'Login' })
+    else next()
+    
+
   })
 
   return Router
