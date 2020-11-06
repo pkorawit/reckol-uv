@@ -1,9 +1,58 @@
 import { auth, firestore } from "firebase"
 
-const collection = firestore().collection('locker')
+const lockerCollection = firestore().collection('locker')
 
-export const getLocker = async ({ id }) => (await collection.doc(id).get()).data()
+const commandCollection = firestore().collection('command')
 
-export const rentLocket = async ({ id, password }) => (await collection.doc(id).update({ status: 'BUSY', password }))
+/**
+ * To get the current state of box of provided boxId 
+ * 
+ * @param {String} boxId Id of box 
+ * @returns {Object} Object of provided boxId document
+ */
+export const getLocker = async ({ boxId }) => (await lockerCollection.doc(boxId).get())
 
-export const signIn = async ({ email, password }) => (await auth().signInWithEmailAndPassword(email, password)).user
+/**
+ * To watch the state changes of provided boxId 
+ *
+ * @param {String} boxId Id of box
+ * @returns {Object} Object of provided boxId document
+ */
+export const watchLocker = async ({ boxId, onChanges }) => lockerCollection.doc(boxId).onSnapshot((snapshot, error) => {
+    if (error) {
+        console.error(error);
+    }
+    onChanges(snapshot)
+})
+
+/**
+ * To rent the locker 
+ * 
+ * @param {String} boxId Id of box
+ * @param {String} password Master key for locker
+ * @param {String} userId Renter
+ * @returns {Object} Object of Command Result
+ */
+export const rentLocket = async ({ boxId, password, userId }) => {
+    const [commandResult] = await Promise.all([
+        commandCollection.add({
+            invoker: userId,
+            name: 'open',
+            target: boxId
+        }),
+
+        lockerCollection.doc(boxId).set({
+            masterCode: password,
+            owner: userId,
+        }, { merge: true })
+    ])
+    return commandResult
+}
+
+/**
+ * 
+ * @param {email} email Email of user
+ * @param {password} password Password of user
+ * @returns {Object} Object of User Credential 
+ */
+export const signIn = async ({ email, password }) => await auth().signInWithEmailAndPassword(email, password)
