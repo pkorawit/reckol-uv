@@ -6,7 +6,6 @@ export const getBox = async ({ commit }, payload) => {
         status: "Available",
         price: 0,
     }
-    console.log('....')
     commit('setRentalBox', box)
 }
 

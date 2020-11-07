@@ -8,7 +8,7 @@
         </div>
         <div class="col-6">
           <div class="status-btn">
-            <q-btn flat @click="toggle">{{ sendPassword }}</q-btn>
+            <q-btn flat @click="unlock">Unlock</q-btn>
           </div>
         </div>
         <div v-if="transform" class="col-12">
@@ -52,6 +52,9 @@ export default {
   },
 
   methods: {
+    unlock() {
+      this.$router.push("/scanner");
+    },
     toggle() {
       if (this.sendPassword == "Confirm") {
         this.showNotif();
