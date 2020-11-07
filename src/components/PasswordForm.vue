@@ -1,19 +1,24 @@
 <template>
   <div>
-    <div class="small-title">{{ title }}</div>
-    <q-card class="q-pa-md  text-center card">
+    <div class="small-title text-h6">{{ title }}</div>
+    <q-card class=" q-pt-xl text-center card">
       <q-card-section class="row justify-center">
         <div class=" ">
           <div>
             <q-input
               type="password"
-              style="display:inline-block;text-align:center;"
+              input-style="text-align:center; font-size:20px"
               v-model="input1"
             ></q-input>
           </div>
 
-          <div class="q-ma-md">
-            <q-btn color="primary" @click="confirmPassword">Confirm</q-btn>
+          <div class="q-ma-lg">
+            <q-btn
+              color="primary"
+              class="full-width q-px-lg q-mt-sm  q-py-sm"
+              @click="confirmPassword"
+              >Confirm</q-btn
+            >
           </div>
         </div>
       </q-card-section>
@@ -73,7 +78,7 @@ export default {
   font-size: 18px;
 }
 .card {
-  margin: 40px;
+  margin-top: 40px;
   border-radius: 14px;
 }
 </style>
