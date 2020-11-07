@@ -2,13 +2,7 @@
   <q-layout class="layout">
     <Header class="header" />
     <q-page-container>
-      <q-card class="main-content">
-        <q-card-section>
-          <div>
-            <router-view />
-          </div>
-        </q-card-section>
-      </q-card>
+      <router-view />
     </q-page-container>
     <Footer class="footer" />
   </q-layout>
@@ -18,7 +12,7 @@
 import Header from "./Header";
 import Footer from "./Footer";
 export default {
-  components: { Header, Footer }
+  components: { Header, Footer },
 };
 </script>
 <style lang="scss" scoped>
@@ -29,15 +23,7 @@ export default {
 .layout {
   overflow-y: hidden;
 }
-.main-content {
-  position: fixed;
-  height: 85vh;
-  width: 100%;
-  overflow-y: hidden;
-  // margin-top: 50px 0px 30px;
-  border-radius: 50px 50px 0px 0px;
-  background: #1f2865;
-}
+
 .header {
   height: 10vh;
 }

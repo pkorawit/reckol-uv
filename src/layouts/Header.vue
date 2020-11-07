@@ -1,5 +1,5 @@
 <template>
-  <q-header class="bg-white text-black column  q-pa-md">
+  <q-header class="bg-white text-black column header">
     <div class="row">
       <div class="text-h4 text-left project-name">uvbox</div>
       <div class="text-h5 info"><p>i</p></div>
@@ -18,5 +18,10 @@ export default {};
 }
 .project-name {
   text-transform: uppercase;
+}
+.header {
+  min-height: 80px;
+  max-height: 80px;
+  padding: 25px;
 }
 </style>

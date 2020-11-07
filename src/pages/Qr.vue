@@ -2,10 +2,8 @@
   <div class="bg">
     <!-- <qr-scanner class="absolute-center bg-blue-5" /> -->
     <div v-if="!decode">
-      <p class="text-h6">
-        Qr Scanner
-      </p>
-      <div class=" absolute-center bg-grey-5 cam">
+      <p class="text-h6">Qr Scanner</p>
+      <div class="absolute-center bg-grey-5 cam">
         <qrcode-stream @decode="onDecode"> </qrcode-stream>
       </div>
     </div>
@@ -19,35 +17,30 @@
 </template>
 
 <script>
-// import QrScanner from "../components/QrScanner";
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
 import PasswordForm from "../components/PasswordForm";
 import Success from "../components/Success";
 export default {
   components: {
-    // QrScanner,
     QrcodeStream,
     PasswordForm,
-    Success
+    Success,
   },
   data() {
     return {
       decode: true,
-      passwordSet: false
+      passwordSet: false,
     };
   },
   methods: {
     onDecode(code) {
-      // alert(code);
-      // Notify.create(code);
       this.decode = true;
-      // this.$store.dispatch("rental/getBox", boxId);
     },
     confirmPassword(val) {
       console.log(val);
       this.passwordSet = val;
-    }
-  }
+    },
+  },
 };
 </script>
 

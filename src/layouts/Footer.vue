@@ -1,33 +1,24 @@
 <template>
-  <q-footer v-if="screen == 'xs'" class="footer-color">
+  <q-footer v-if="screen == 'xs'" class="footer">
     <div>
-      <div class="absolute ss">
-        <q-btn flat icon="my_location" class="absolute btn" dense to="/scanner">
-          <span class="qr"></span>
-        </q-btn>
+      <div flat class="absolute-bottom scan-btn">
+        <div class="absolute ss">
+          <q-btn
+            flat
+            icon="my_location"
+            class="absolute btn"
+            dense
+            to="/scanner"
+          >
+            <span class="qr"></span>
+          </q-btn>
+        </div>
+        <div class="row justify-around">
+          <q-btn dense flat text-color="white" icon="home" to="/"></q-btn>
+          <q-btn dense flat text-color="white" icon="settings"></q-btn>
+        </div>
       </div>
-      <q-card flat class=" absolute-bottom footer-color">
-        <q-card-section class="full-width full-height ">
-          <div class="row justify-center justify-around items-center">
-            <q-btn dense flat text-color="white" icon="home" to="/"></q-btn>
-            <q-btn dense flat text-color="white" icon="settings"></q-btn>
-          </div>
-        </q-card-section>
-      </q-card>
     </div>
-    <!-- <q-tabs
-      no-caps
-      active-color="teal"
-      indicator-color="transparent"
-      class="bg-grey-10 q-ma-sm"
-      v-model="tab"
-      dense
-    >
-      <q-tab name="home" icon="home" label="Home" />
-
-      <q-tab name="locker" icon="dashboard" label="Locker" />
-      <q-tab name="settings" icon="settings" label="Setting" />
-    </q-tabs> -->
   </q-footer>
 </template>
 
@@ -36,12 +27,12 @@ export default {
   data() {
     return {
       screen: "",
-      tab: "home"
+      tab: "home",
     };
   },
   mounted() {
     this.screen = this.$q.screen.name;
-  }
+  },
 };
 </script>
 
@@ -70,7 +61,13 @@ export default {
 
   bottom: 5px;
 }
-.footer-color {
+.scan-btn {
+  background: #1f2865;
+}
+
+.footer {
+  min-height: 65px;
+  max-height: 65px;
   background: #1f2865;
 }
 </style>

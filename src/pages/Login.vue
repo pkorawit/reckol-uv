@@ -18,18 +18,15 @@
 export default {
   data() {
     return {
-      tel: ""
+      tel: "",
     };
   },
   watch: {
     tel(oldVal, newVal) {
-      console.log(oldVal);
-      //   just for test
       localStorage.setItem("isLogin", true);
-      //
       oldVal.length == 12 ? this.$router.push("/") : "";
-    }
-  }
+    },
+  },
 };
 </script>
 
