@@ -3,47 +3,6 @@
     <div class="small-title">{{ title }}</div>
     <q-card class="q-pa-md  text-center card">
       <q-card-section class="row justify-center">
-        <!-- <div class="text-subtitle2 row">
-          <q-input
-            v-model="input1"
-            outlined
-            mask="#"
-            class="col-3 q-px-md"
-            ref="input1"
-            :rules="[val => !!val || '* Required']"
-            lazy-rules
-            @keyup="toInput(2)"
-          />
-          <q-input
-            v-model="input2"
-            outlined
-            mask="#"
-            class="col-3 q-px-md"
-            ref="input2"
-            :rules="[val => !!val || '* Required']"
-            lazy-rules
-            @keyup="toInput(3)"
-          />
-          <q-input
-            v-model="input3"
-            outlined
-            mask="#"
-            class="col-3 q-px-md"
-            ref="input3"
-            :rules="[val => !!val || '* Required']"
-            lazy-rules
-            @keyup="toInput(4)"
-          />
-          <q-input
-            v-model="input4"
-            outlined
-            mask="#"
-            class="col-3 q-px-md"
-            ref="input4"
-            :rules="[val => !!val || '* Required']"
-            lazy-rules
-          />
-        </div> -->
         <div class=" ">
           <div>
             <q-input
