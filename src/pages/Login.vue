@@ -11,22 +11,57 @@
         v-model="tel"
         class="shadow-10"
       ></q-input>
+      <div class="q-pt-xl" id="recaptcha-container"></div>
     </div>
   </div>
 </template>
 
 <script>
+import { Loading } from "quasar";
 export default {
   data() {
     return {
       tel: "",
+      recaptchaVerifier: null,
     };
   },
-  watch: {
-    tel(oldVal, newVal) {
-      localStorage.setItem("isLogin", true);
-      oldVal.length == 12 ? this.$router.push("/") : "";
+  methods: {
+    async onLogin(response) {
+      try {
+        const formatTel = (tel) => `+66${tel.slice(1, 10)}`;
+        Loading.show();
+        const confirmationResult = await this.$auth().signInWithPhoneNumber(
+          formatTel(this.tel),
+          this.recaptchaVerifier
+        );
+        const result = await confirmationResult.confirm("123456");
+        localStorage.setItem("auth__user", result.user);
+        Loading.hide();
+        this.$router.push("/");
+      } catch (error) {
+        console.error(error);
+      }
     },
+  },
+  watch: {
+    tel(val, newVal) {
+      if (val.length == 10) {
+        this.recaptchaVerifier.render();
+      }
+    },
+  },
+  mounted() {
+    this.recaptchaVerifier = new this.$auth.RecaptchaVerifier(
+      "recaptcha-container",
+      {
+        size: "normal",
+        callback: (response) => this.onLogin(response),
+        "expired-callback": function () {
+          // Response expired. Ask user to solve reCAPTCHA again.
+          // ...
+        },
+      }
+    );
   },
 };
 </script>
