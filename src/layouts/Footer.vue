@@ -5,7 +5,7 @@
         <div class="absolute ss">
           <q-btn
             flat
-            icon="my_location"
+            icon="fas fa-qrcode"
             class="absolute btn"
             dense
             to="/scanner"
@@ -13,9 +13,15 @@
             <span class="qr"></span>
           </q-btn>
         </div>
-        <div class="row justify-around">
-          <q-btn dense flat text-color="white" icon="home" to="/"></q-btn>
-          <q-btn dense flat text-color="white" icon="settings"></q-btn>
+        <div class="row justify-between q-pb-md q-mx-xl">
+          <q-btn
+            dense
+            flat
+            text-color="white"
+            icon="fas fa-home"
+            to="/"
+          ></q-btn>
+          <q-btn dense flat text-color="white" icon="fas fa-user-alt"></q-btn>
         </div>
       </div>
     </div>
@@ -27,12 +33,12 @@ export default {
   data() {
     return {
       screen: "",
-      tab: "home",
+      tab: "home"
     };
   },
   mounted() {
     this.screen = this.$q.screen.name;
-  },
+  }
 };
 </script>
 
@@ -59,7 +65,7 @@ export default {
 .btn {
   position: absolute;
 
-  bottom: 5px;
+  bottom: 0px;
 }
 .scan-btn {
   background: #1f2865;
