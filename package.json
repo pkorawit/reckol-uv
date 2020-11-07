@@ -6,7 +6,8 @@
   "author": "Korawit Prutsachainimmit <korawit.p@gmail.com>",
   "private": true,
   "scripts": {
-    "test": "echo \"No test specified\" && exit 0"
+    "test": "echo \"No test specified\" && exit 0",
+    "build": "quasar build -m pwa"
   },
   "dependencies": {
     "@babel/core": "^7.12.3",
