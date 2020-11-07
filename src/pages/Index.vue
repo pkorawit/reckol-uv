@@ -24,17 +24,10 @@
       </div>
     </div>
 
-    <div class="box">
-      <p class="text-h6">Your Locker</p>
-      <div v-for="index in 0" :key="index">
-        <component
-          :is="step"
-          :box="box"
-          @decode="onDecoded"
-          @back="onBack"
-          @confirm="onConfirm"
-          @rent="onRent"
-        ></component>
+    <div :class="boxClass">
+      <p class="text-h6">Your Locker: {{ boxes }}</p>
+      <div v-for="index in boxes" :key="index">
+        <box :box="box" @rent="onRent" class="q-py-md"></box>
       </div>
     </div>
   </div>
@@ -53,7 +46,16 @@ export default {
     Box,
     PasswordForm,
   },
+  data() {
+    return {
+      boxes: 3,
+    };
+  },
   computed: {
+    boxClass() {
+      const boxExists = !!this.boxes;
+      return boxExists ? "box" : "no-box";
+    },
     step: {
       get() {
         return this.$store.state.rental.step;
@@ -85,27 +87,6 @@ export default {
     },
     onRent() {
       this.step = "PasswordForm";
-    },
-    onConfirm() {
-      this.$store.commit("setRentalPassword", val);
-      this.step = "RentalResult";
-      this.$store.dispatch("rentBox");
-    },
-    toPreviousPage() {
-      if (this.step == "QrcodeStream") {
-      }
-      if (this.step == "Box") {
-        this.step = "QrcodeStream";
-      }
-      if (this.step == "PasswordForm") {
-        this.step = "Box";
-      }
-      if (this.step == "RentalResult") {
-        this.step = "RentalResult";
-      }
-    },
-    toMyLocker() {
-      this.$router.push("/my-locker");
     },
   },
   mounted() {
@@ -153,7 +134,7 @@ export default {
 
   height: 100vh; // Hack transition
 
-  max-height: 100px;
+  max-height: 200px;
 
   &:hover {
     max-height: calc(
@@ -162,46 +143,32 @@ export default {
   }
 }
 
-@mixin test($child) {
-  @if ($child == 0) {
-    @keyframes Span {
-      from {
-        margin-top: 10%;
-        top: 100%;
-        height: 100%;
-      }
-      to {
-        margin-top: 0;
-        top: 10%;
-        height: 80vh;
-      }
-    }
-  } @else if($child ==1) {
-    @keyframes Span {
-      from {
-        margin-top: 10%;
-        top: 100%;
-        height: 100%;
-      }
-      to {
-        margin-top: 0;
-        top: 10%;
-        height: 80vh;
-      }
-    }
-  } @else if($child >=2) {
-    @keyframes Span {
-      from {
-        margin-top: 10%;
-        top: 100%;
-        height: 100%;
-      }
-      to {
-        margin-top: 0;
-        top: 10%;
-        height: 80vh;
-      }
-    }
+.no-box {
+  position: absolute;
+  bottom: 65px;
+
+  padding: 25px;
+
+  width: 100%;
+
+  border-radius: 50px 50px 0px 0px;
+
+  background: #eeecec;
+
+  color: black;
+
+  overflow-y: hidden;
+
+  transition: max-height 0.15s ease-in-out;
+
+  height: 100vh; // Hack transition
+
+  max-height: 100px;
+
+  &:hover {
+    max-height: calc(
+      100vh - (80px + 65px) - (45px + 25px)
+    ); // 100vh - (header height - footer height)px
   }
 }
 </style>

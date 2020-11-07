@@ -1,17 +1,17 @@
 <template>
-  <div class="bg">
-    <!-- <qr-scanner class="absolute-center bg-blue-5" /> -->
-    <div v-if="!decode">
-      <p class="text-h6">Qr Scanner</p>
-      <div class="absolute-center bg-grey-5 cam">
-        <qrcode-stream @decode="onDecode"> </qrcode-stream>
-      </div>
+  <div class="background">
+    <div v-if="isQr">
+      <p class="text-h6">{{ step }}</p>
+
+      <qrcode-stream @decode="onDecode" class="qr-scanner"> </qrcode-stream>
     </div>
-    <div v-else-if="decode && !passwordSet">
-      <password-form title="Set Password" @confirmPassword="confirmPassword" />
+
+    <div v-else-if="isSetPassword">
+      <password-form :title="step" @confirmPassword="confirmPassword" />
     </div>
-    <div v-else-if="decode && passwordSet">
-      <success title="Success" />
+
+    <div v-else-if="isSuccess">
+      <success :title="step" />
     </div>
   </div>
 </template>
@@ -28,9 +28,37 @@ export default {
   },
   data() {
     return {
-      decode: true,
+      decode: false,
       passwordSet: false,
     };
+  },
+  computed: {
+    isQr() {
+      return !this.decode;
+    },
+    isSetPassword() {
+      return this.decode && !this.passwordSet;
+    },
+    isSuccess() {
+      return this.decode && this.passwordSet;
+    },
+    step() {
+      let step = "";
+
+      if (this.isQr) {
+        step = "Qr Scanner";
+      }
+
+      if (this.isSetPassword) {
+        step = "Set Password";
+      }
+
+      if (this.isSuccess) {
+        step = "Success";
+      }
+
+      return step;
+    },
   },
   methods: {
     onDecode(code) {
@@ -41,28 +69,38 @@ export default {
       this.passwordSet = val;
     },
   },
+  mounted() {
+    setTimeout(() => {
+      this.onDecode("");
+    }, 3000);
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-.bg {
-  position: fixed;
-  height: 85vh;
+.background {
+  position: absolute;
   width: 100%;
-  left: 0;
-  top: 9.8vh;
+
+  height: calc(
+    100vh - (80px + 65px)
+  ); // 100vh - (header height - footer height)px
+
   overflow-y: hidden;
-  // margin-top: 50px 0px 30px;
+
   border-radius: 50px 50px 0px 0px;
-  //   background: #1f2865;
+
   background: #eeecec;
+
+  padding: 25px;
 
   p {
     padding: 15px;
   }
 }
-.cam {
-  width: 70vw;
-  height: 40vh;
+.qr-scanner {
+  width: 100%;
+  height: calc(100vh - (80px + 65px) - (62px + 25px));
+  padding-bottom: 50px;
 }
 </style>
