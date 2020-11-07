@@ -18,8 +18,9 @@ export const getLocker = async ({ boxId }) => (await lockerCollection.doc(boxId)
  * @param {String} boxId Id of box
  * @returns {Object} Object of provided boxId document
  */
-export const watchLocker = async ({ boxId, onChanges }) => lockerCollection.doc(boxId).onSnapshot((snapshot, error) => {
+export const watchLocker = async ({ boxId, onChanges, onError }) => lockerCollection.doc(boxId).onSnapshot((snapshot, error) => {
     if (error) {
+        onError(error)
         console.error(error);
     }
     onChanges(snapshot)
@@ -38,7 +39,9 @@ export const rentLocket = async ({ boxId, password, userId }) => {
         commandCollection.add({
             invoker: userId,
             name: 'open',
-            target: boxId
+            target: boxId,
+            executed: false,
+            startAt: null
         }),
 
         lockerCollection.doc(boxId).set({
