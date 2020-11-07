@@ -26,9 +26,11 @@
 
     <div :class="boxClass">
       <p class="text-h6">Your Locker: {{ boxes }}</p>
-      <div v-for="index in boxes" :key="index">
-        <box :box="box" @rent="onRent" class="q-py-md"></box>
-      </div>
+      <q-scroll-area :delay="1500" class="scroll-area">
+        <div v-for="index in boxes" :key="index">
+          <box :box="box" @rent="onRent" class="q-py-md"></box>
+        </div>
+      </q-scroll-area>
     </div>
   </div>
 </template>
@@ -48,7 +50,7 @@ export default {
   },
   data() {
     return {
-      boxes: 3,
+      boxes: 5,
     };
   },
   computed: {
@@ -96,6 +98,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.scroll-area {
+  height: 100%;
+}
+
 .about {
   position: absolute;
   width: 100%;

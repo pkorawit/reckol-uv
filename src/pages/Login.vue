@@ -6,9 +6,10 @@
     <div class="absolute input">
       <q-input
         dark
-        hint="ex. 0##-###-####"
+        type="number"
         mask="###-###-####"
         v-model="tel"
+        class="shadow-10"
       ></q-input>
     </div>
   </div>
@@ -36,6 +37,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: calc(100vw - 100px);
 }
 .text {
   top: 50%;
