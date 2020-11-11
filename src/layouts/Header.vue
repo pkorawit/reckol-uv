@@ -2,7 +2,9 @@
   <q-header class="bg-white text-black column header">
     <div class="row">
       <div class="text-h4 text-left project-name">uvbox</div>
-      <div class="text-h5 info"><p>i</p></div>
+      <div class="text-h5 info">
+        <q-icon name="info" size="42px"></q-icon>
+      </div>
     </div>
   </q-header>
 </template>

@@ -1,60 +1,24 @@
 <template>
   <div>
-    <div class="small-title">{{ title }}</div>
-    <q-card class="q-pa-md  text-center card">
+    <div class="small-title text-h6">{{ title }}</div>
+    <q-card class=" q-pt-xl text-center card">
       <q-card-section class="row justify-center">
-        <!-- <div class="text-subtitle2 row">
-          <q-input
-            v-model="input1"
-            outlined
-            mask="#"
-            class="col-3 q-px-md"
-            ref="input1"
-            :rules="[val => !!val || '* Required']"
-            lazy-rules
-            @keyup="toInput(2)"
-          />
-          <q-input
-            v-model="input2"
-            outlined
-            mask="#"
-            class="col-3 q-px-md"
-            ref="input2"
-            :rules="[val => !!val || '* Required']"
-            lazy-rules
-            @keyup="toInput(3)"
-          />
-          <q-input
-            v-model="input3"
-            outlined
-            mask="#"
-            class="col-3 q-px-md"
-            ref="input3"
-            :rules="[val => !!val || '* Required']"
-            lazy-rules
-            @keyup="toInput(4)"
-          />
-          <q-input
-            v-model="input4"
-            outlined
-            mask="#"
-            class="col-3 q-px-md"
-            ref="input4"
-            :rules="[val => !!val || '* Required']"
-            lazy-rules
-          />
-        </div> -->
         <div class=" ">
           <div>
             <q-input
               type="password"
-              style="display:inline-block;text-align:center;"
+              input-style="text-align:center; font-size:20px"
               v-model="input1"
             ></q-input>
           </div>
 
-          <div class="q-ma-md">
-            <q-btn color="primary" @click="confirmPassword">Confirm</q-btn>
+          <div class="q-ma-lg">
+            <q-btn
+              color="primary"
+              class="full-width q-px-lg q-mt-sm  q-py-sm"
+              @click="confirmPassword"
+              >Confirm</q-btn
+            >
           </div>
         </div>
       </q-card-section>
@@ -114,7 +78,7 @@ export default {
   font-size: 18px;
 }
 .card {
-  margin: 40px;
+  margin-top: 40px;
   border-radius: 14px;
 }
 </style>
