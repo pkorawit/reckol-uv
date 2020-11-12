@@ -65,7 +65,6 @@ export default {
       this.decode = true;
     },
     confirmPassword(val) {
-      console.log(val);
       this.passwordSet = val;
     },
   },

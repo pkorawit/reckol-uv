@@ -1,18 +1,18 @@
 <template>
   <div>
-    <q-card flat bordered class="  locker">
-      <p style="margin:5px 0 0 10px">UVBOX</p>
+    <q-card flat bordered class="locker">
+      <p style="margin: 5px 0 0 10px">UVBOX</p>
       <div class="row text-left">
         <div class="col-8">
-          <div class="small-title ">Locker {{ box.number }}</div>
+          <div class="small-title">Locker {{ box.number }}</div>
         </div>
         <div class="col-4">
           <div>
-            <q-btn text-color="primary" outline @click="unlock">detail</q-btn>
+            <q-btn text-color="primary" outline @click="detail">detail</q-btn>
           </div>
         </div>
         <div class="col-12 text-left">
-          <p style="margin:0 0 0 10px">Owner : 088-xxx-xxxx</p>
+          <p style="margin: 0 0 0 10px">Owner : 088-xxx-xxxx</p>
         </div>
       </div>
     </q-card>
@@ -24,14 +24,14 @@ export default {
   props: {
     box: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       transform: false,
       sendPassword: "",
-      targetPhoneNumber: ""
+      targetPhoneNumber: "",
     };
   },
   mounted() {
@@ -41,8 +41,8 @@ export default {
   },
 
   methods: {
-    unlock() {
-      this.$router.push("/scanner");
+    detail() {
+      this.$router.push("/detail");
     },
     toggle() {
       if (this.sendPassword == "Confirm") {
@@ -66,17 +66,17 @@ export default {
             color: "yellow",
             handler: () => {
               /* ... */
-            }
-          }
-        ]
+            },
+          },
+        ],
       });
-    }
+    },
   },
   watch: {
-    targetPhoneNumber: function(newInput) {
+    targetPhoneNumber: function (newInput) {
       newInput.length == 12 ? (this.sendPassword = "Confirm") : "";
-    }
-  }
+    },
+  },
 };
 </script>
 
