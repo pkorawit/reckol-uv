@@ -1,31 +1,20 @@
 <template>
   <div>
-    <q-card class="q-pa-md locker">
-      <q-card-section class="row text-center">
-        <div class="col-6">
-          <div class="small-title q-mb-md">Box No.</div>
-          <div class="text-h5">{{ box.number }}</div>
+    <q-card flat bordered class="  locker">
+      <p style="margin:5px 0 0 10px">UVBOX</p>
+      <div class="row text-left">
+        <div class="col-8">
+          <div class="small-title ">Locker {{ box.number }}</div>
         </div>
-        <div class="col-6">
-          <div class="status-btn">
-            <q-btn flat @click="unlock">Unlock</q-btn>
+        <div class="col-4">
+          <div>
+            <q-btn text-color="primary" outline @click="unlock">detail</q-btn>
           </div>
         </div>
-        <div v-if="transform" class="col-12">
-          <div :class="{ transform }">
-            <div>
-              <q-input
-                class="center-placeholder"
-                placeholder="xxx-xxx-xxxx"
-                mask="###-###-####"
-                hint="* input the number"
-                v-model="targetPhoneNumber"
-                autofocus
-              ></q-input>
-            </div>
-          </div>
+        <div class="col-12 text-left">
+          <p style="margin:0 0 0 10px">Owner : 088-xxx-xxxx</p>
         </div>
-      </q-card-section>
+      </div>
     </q-card>
   </div>
 </template>
@@ -35,14 +24,14 @@ export default {
   props: {
     box: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
       transform: false,
       sendPassword: "",
-      targetPhoneNumber: "",
+      targetPhoneNumber: ""
     };
   },
   mounted() {
@@ -77,54 +66,35 @@ export default {
             color: "yellow",
             handler: () => {
               /* ... */
-            },
-          },
-        ],
+            }
+          }
+        ]
       });
-    },
+    }
   },
   watch: {
-    targetPhoneNumber: function (newInput) {
+    targetPhoneNumber: function(newInput) {
       newInput.length == 12 ? (this.sendPassword = "Confirm") : "";
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .small-title {
   font-size: 18px;
+  margin-left: 10px;
 }
 .locker {
   background: white;
   border-radius: 20px;
+  color: $primary;
+  font-weight: 500;
 }
 .status-btn {
   background: #1f2865;
   color: white;
   padding: 10px;
   border-radius: 20px;
-}
-.center-placeholder {
-  ::-webkit-input-placeholder {
-    text-align: center;
-  }
-
-  :-moz-placeholder {
-    /* Firefox 18- */
-    text-align: center;
-  }
-
-  ::-moz-placeholder {
-    /* Firefox 19+ */
-    text-align: center;
-  }
-
-  :-ms-input-placeholder {
-    text-align: center;
-  }
-}
-.transform {
-  display: block;
 }
 </style>

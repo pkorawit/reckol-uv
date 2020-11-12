@@ -25,10 +25,27 @@
     </div>
 
     <div :class="boxClass">
-      <p class="text-h6">Your Locker: {{ boxes }}</p>
+      <p class="text-h6">Locker</p>
+      <div class=" q-ma-md row justify-center">
+        <q-btn-group rounded>
+          <q-btn rounded color="white" label="My locker" text-color="primary" />
+          <q-btn
+            rounded
+            color="primary"
+            label="From other "
+            text-color="white"
+          />
+        </q-btn-group>
+      </div>
+
       <q-scroll-area :delay="1500" class="scroll-area">
-        <div v-for="index in boxes" :key="index">
-          <box :box="box" @rent="onRent" class="q-py-md"></box>
+        <div v-if="boxes">
+          <div v-for="index in boxes" :key="index">
+            <box :box="box" @rent="onRent" class="q-py-xs"></box>
+          </div>
+        </div>
+        <div v-else class=" column justify-center items-center">
+          <p class="text-h4 text-none ">None</p>
         </div>
       </q-scroll-area>
     </div>
@@ -46,11 +63,11 @@ export default {
   components: {
     QrcodeStream,
     Box,
-    PasswordForm,
+    PasswordForm
   },
   data() {
     return {
-      boxes: 5,
+      boxes: 2
     };
   },
   computed: {
@@ -64,18 +81,18 @@ export default {
       },
       set(val) {
         this.$store.commit("rental/setRentalStep", val);
-      },
+      }
     },
     box: {
       get() {
         return this.$store.state.rental.selectedBox;
-      },
+      }
     },
     rentalResult: {
       get() {
         return this.$store.state.rental.result;
-      },
-    },
+      }
+    }
   },
   methods: {
     onDecoded(boxId) {
@@ -89,11 +106,11 @@ export default {
     },
     onRent() {
       this.step = "PasswordForm";
-    },
+    }
   },
   mounted() {
     this.$store.dispatch("rental/getBox", "");
-  },
+  }
 };
 </script>
 
@@ -175,6 +192,17 @@ export default {
     max-height: calc(
       100vh - (80px + 65px) - (45px + 25px)
     ); // 100vh - (header height - footer height)px
+  }
+}
+
+.text-none {
+  position: absolute;
+  color: #1f2865b9;
+  // top: 50%;
+  transform: translate(0%, 380%);
+
+  @media (max-width: 320px) {
+    transform: translate(0%, 280%);
   }
 }
 </style>
