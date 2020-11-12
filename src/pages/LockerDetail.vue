@@ -68,27 +68,32 @@ export default {
   color: white;
 
   padding: 25px;
-}
 
-.name {
-  color: white;
-  height: 50px;
-  width: 100%;
-  text-align: center;
-  background: $primary;
-  border-radius: 40px;
-}
+  .name {
+    color: white;
+    height: 50px;
+    width: 100%;
+    text-align: center;
+    background: $primary;
+    border-radius: 40px;
+  }
 
-.information {
-  color: white;
-  font-size: 15px;
-  background: $primary;
-  border-radius: 25px;
-}
+  .information {
+    color: white;
+    font-size: 15px;
+    background: $primary;
+    border-radius: 25px;
+  }
 
-.my-locker-btn {
-  width: 150px;
-  height: 150px;
-  font-size: 30px;
+  .action {
+    .my-locker {
+      .my-locker-btn {
+        width: 150px;
+        height: 150px;
+        font-size: 30px;
+        border-radius: 25px;
+      }
+    }
+  }
 }
 </style>

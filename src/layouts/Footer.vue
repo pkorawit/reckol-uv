@@ -14,8 +14,13 @@
           </q-btn>
         </div>
         <div class="row justify-between q-pb-md q-mx-xl">
-          <q-btn dense flat text-color="white" icon="fas fa-home" to="/"></q-btn
-          >asd
+          <q-btn
+            dense
+            flat
+            text-color="white"
+            icon="fas fa-home"
+            to="/"
+          ></q-btn>
           <q-btn dense flat text-color="white" icon="fas fa-user-alt"></q-btn>
         </div>
       </div>
@@ -28,12 +33,12 @@ export default {
   data() {
     return {
       screen: "",
-      tab: "home"
+      tab: "home",
     };
   },
   mounted() {
     this.screen = this.$q.screen.name;
-  }
+  },
 };
 </script>
 
