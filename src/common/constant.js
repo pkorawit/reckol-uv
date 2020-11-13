@@ -1,0 +1,5 @@
+export const MODE = {
+    RENTAL: 'RENTAL',
+    SELF_UNLOCK: 'SELF_UNLOCK',
+    OTP_UNLOCK: 'OTP_UNLOCK'
+}

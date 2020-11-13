@@ -6,8 +6,10 @@ const routes = [
     children: [
       { path: '/', component: () => import('pages/Index.vue') },
       { path: '/scanner', component: () => import('pages/Qr.vue') },
-      {path:'/account',component: ()=> import('pages/Account.vue')},
-      { path: '/detail', component: () => import('pages/LockerDetail.vue') }
+      { path: '/account', component: () => import('pages/Account.vue') },
+      { path: '/detail', component: () => import('pages/LockerDetail.vue') },
+      { path: '/input-passcode', component: () => import('pages/InputPasscode.vue') },
+      { path: '/success', component: () => import('pages/Success.vue') }
     ]
   },
   {

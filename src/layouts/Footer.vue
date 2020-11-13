@@ -39,12 +39,12 @@ export default {
   data() {
     return {
       screen: "",
-      tab: "home"
+      tab: "home",
     };
   },
   mounted() {
     this.screen = this.$q.screen.name;
-  }
+  },
 };
 </script>
 

@@ -1,105 +1,68 @@
 <template>
-  <div class="background">
-    <div v-if="isQr">
-      <p class="text-h6">{{ step }}</p>
-
-      <qrcode-stream @decode="onDecode" class="qr-scanner"> </qrcode-stream>
+<div class="background">
+    <div>
+        <qrcode-stream @decode="onDecode" class="qr-scanner"> </qrcode-stream>
     </div>
-
-    <div v-else-if="isSetPassword">
-      <password-form :title="step" @confirmPassword="confirmPassword" />
-    </div>
-
-    <div v-else-if="isSuccess">
-      <success :title="step" />
-    </div>
-  </div>
+</div>
 </template>
 
 <script>
-import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
-import PasswordForm from "../components/PasswordForm";
-import Success from "../components/Success";
-export default {
-  components: {
+import {
     QrcodeStream,
-    PasswordForm,
-    Success,
-  },
-  data() {
-    return {
-      decode: false,
-      passwordSet: false,
-    };
-  },
-  computed: {
-    isQr() {
-      return !this.decode;
-    },
-    isSetPassword() {
-      return this.decode && !this.passwordSet;
-    },
-    isSuccess() {
-      return this.decode && this.passwordSet;
-    },
-    step() {
-      let step = "";
+    QrcodeDropZone,
+    QrcodeCapture
+} from "vue-qrcode-reader";
+import {
+    SCANNER_MODE
+} from "../common/constant";
 
-      if (this.isQr) {
-        step = "Qr Scanner";
-      }
-
-      if (this.isSetPassword) {
-        step = "Set Password";
-      }
-
-      if (this.isSuccess) {
-        step = "Success";
-      }
-
-      return step;
+export default {
+    components: {
+        QrcodeStream,
     },
-  },
-  methods: {
-    onDecode(code) {
-      this.decode = true;
+    computed: {
+        mode() {
+            return this.$route.query.mode;
+        },
     },
-    confirmPassword(val) {
-      this.passwordSet = val;
+    methods: {
+        onDecode(lockerId) {
+            this.$router.push({
+                path: `/input-passcode?mode=${this.mode}&lockerId=${lockerId}`,
+            });
+        },
     },
-  },
-  mounted() {
-    setTimeout(() => {
-      this.onDecode("");
-    }, 3000);
-  },
+    mounted() {
+        setTimeout(() => {
+            this.onDecode("");
+        }, 3000);
+    },
 };
 </script>
 
 <style lang="scss" scoped>
 .background {
-  position: absolute;
-  width: 100%;
+    position: absolute;
+    width: 100%;
 
-  height: calc(
-    100vh - (80px + 65px)
-  ); // 100vh - (header height - footer height)px
+    height: calc(100vh - (80px + 65px));
 
-  overflow-y: hidden;
+    overflow-y: hidden;
 
-  border-radius: 50px 50px 0px 0px;
+    border-radius: 50px 50px 0px 0px;
 
-  background: #eeecec;
+    background: #eeecec;
 
-  padding: 25px;
+    padding: 25px;
 
-  p {
-    padding: 15px;
-  }
+    p {
+        padding: 15px;
+    }
 }
+
 .qr-scanner {
-  width: 100%;
-  height: calc(100vh - (80px + 65px) - (62px + 25px));
-  padding-bottom: 50px;
+    width: 100%;
+    height: calc(100vh - (80px + 65px) - (62px + 25px));
+    padding-bottom: 50px;
 }
 </style>

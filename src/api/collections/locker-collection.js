@@ -19,9 +19,15 @@ export const watchLockerState = async ({ lockerId, onChanges, onError }) => lock
         console.error(error);
     }
     onChanges(snapshot)
+
 })
 
 export const isValidMasterCode = async ({ lockerId, masterCode }) => {
     const locker = await getLockerState({ lockerId })
     return locker.data().masterCode === masterCode
+}
+
+export const isValidOneTimeCode = async ({ lockerId, onetimeCode }) => {
+    const locker = await getLockerState({ lockerId })
+    return locker.data().onetimeCode === onetimeCode
 }

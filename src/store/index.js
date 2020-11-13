@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import rental from "./rental";
 
 Vue.use(Vuex)
 
@@ -16,9 +15,6 @@ Vue.use(Vuex)
 
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
-    modules: {
-      rental
-    },
 
     // enable strict mode (adds overhead!)
     // for dev mode only
