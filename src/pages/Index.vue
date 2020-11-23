@@ -1,167 +1,185 @@
 <template>
-<div class="column">
+  <div class="column">
     <div class="about">
+      <div>
+        <p class="text-h6 ">My locker</p>
         <div>
-            <p class="text-h6">About</p>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates,
-                velit? Doloribus numquam quia debitis ut tempora est accusantium
-                inventore quod. Officiis quibusdam animi aliquam, quod nam totam
-                beatae assumenda ex!
-            </p>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero, quos
-                culpa! Facere voluptate repellendus error quibusdam omnis quis nulla
-                nostrum necessitatibus ad ipsum eos quia rerum aliquid, reprehenderit
-                sed amet.
-            </p>
-            <p>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa,
-                voluptatibus et soluta velit amet voluptatem reprehenderit quae a,
-                ipsa ad autem reiciendis ratione ea suscipit! Voluptas fugit alias
-                quae adipisci?
-            </p>
+          <div v-if="boxes">
+            <div v-for="index in boxes" :key="index">
+              <box class="q-py-xs"></box>
+            </div>
+          </div>
+          <div v-else class="column justify-center items-center">
+            <p class="text-h4 text-none text-white">None</p>
+          </div>
         </div>
+        <!-- <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates,
+          velit? Doloribus numquam quia debitis ut tempora est accusantium
+          inventore quod. Officiis quibusdam animi aliquam, quod nam totam
+          beatae assumenda ex!
+        </p>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero, quos
+          culpa! Facere voluptate repellendus error quibusdam omnis quis nulla
+          nostrum necessitatibus ad ipsum eos quia rerum aliquid, reprehenderit
+          sed amet.
+        </p>
+        <p>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa,
+          voluptatibus et soluta velit amet voluptatem reprehenderit quae a,
+          ipsa ad autem reiciendis ratione ea suscipit! Voluptas fugit alias
+          quae adipisci?
+        </p> -->
+      </div>
     </div>
 
-    <div :class="boxClass">
-        <p class="text-h6">Locker</p>
-        <div class="q-ma-md row justify-center">
-            <q-btn-group rounded>
-                <q-btn rounded color="white" label="My locker" text-color="primary" />
-                <q-btn rounded color="primary" label="From other " text-color="white" />
-            </q-btn-group>
-        </div>
+    <div :class="otherBoxClass">
+      <p class="text-h6">Share locker</p>
+      <!-- <div class="q-ma-md row justify-center">
+        <q-btn-group rounded>
+          <q-btn rounded color="white" label="My locker" text-color="primary" />
+          <q-btn
+            rounded
+            color="primary"
+            label="From other "
+            text-color="white"
+          />
+        </q-btn-group>
+      </div> -->
 
-        <q-scroll-area :delay="1500" class="scroll-area">
-            <div v-if="boxes">
-                <div v-for="index in boxes" :key="index">
-                    <box class="q-py-xs"></box>
-                </div>
-            </div>
-            <div v-else class="column justify-center items-center">
-                <p class="text-h4 text-none">None</p>
-            </div>
-        </q-scroll-area>
+      <q-scroll-area :delay="1500" class="scroll-area">
+        <div v-if="other">
+          <div v-for="index in other" :key="index">
+            <box class="q-py-xs"></box>
+          </div>
+        </div>
+        <div v-else class="column justify-center items-center">
+          <p class="text-h4 text-none ">None</p>
+        </div>
+      </q-scroll-area>
     </div>
-</div>
+  </div>
 </template>
 
 <script>
 import Box from "../components/Box.vue";
-import {
-    QrcodeStream
-} from "vue-qrcode-reader";
+import { QrcodeStream } from "vue-qrcode-reader";
 import PasswordForm from "../components/PasswordForm.vue";
-import {
-    Notify
-} from "quasar";
+import { Notify } from "quasar";
 
 export default {
-    name: "IndexPage",
-    components: {
-        QrcodeStream,
-        Box,
-        PasswordForm,
-    },
-    data() {
-        return {
-            boxes: 2,
-        };
-    },
-    computed: {
-        boxClass() {
-            const boxExists = !!this.boxes;
-            return boxExists ? "box" : "no-box";
-        },
-    },
+  name: "IndexPage",
+  components: {
+    QrcodeStream,
+    Box,
+    PasswordForm
+  },
+  data() {
+    return {
+      boxes: 5,
+      other: 0
+    };
+  },
+  computed: {
+    otherBoxClass() {
+      const otherBoxExists = !!this.other;
+      return otherBoxExists ? "box" : "no-box";
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .scroll-area {
-    height: 100%;
+  height: 100%;
 }
 
 .about {
-    position: absolute;
-    width: 100%;
+  position: absolute;
+  width: 100%;
 
-    height: calc(100vh - (80px + 65px)); // 100vh - (header height - footer height)px
+  height: calc(
+    100vh - (80px + 65px)
+  ); // 100vh - (header height - footer height)px
 
-    overflow-y: hidden;
+  overflow-y: scroll;
 
-    border-radius: 50px 50px 0px 0px;
+  border-radius: 50px 50px 0px 0px;
 
-    background: #1f2865;
+  background: #1f2865;
 
-    color: white;
+  color: white;
 
-    padding: 25px;
+  padding: 25px;
 }
 
 .box {
-    position: absolute;
-    bottom: 65px;
+  position: absolute;
+  bottom: 65px;
 
-    padding: 25px;
+  padding: 25px;
 
-    width: 100%;
+  width: 100%;
 
-    border-radius: 50px 50px 0px 0px;
+  border-radius: 50px 50px 0px 0px;
 
-    background: #eeecec;
+  background: #eeecec;
 
-    color: black;
+  color: black;
 
-    overflow-y: hidden;
+  overflow-y: hidden;
 
-    transition: max-height 0.15s ease-in-out;
+  transition: max-height 0.15s ease-in-out;
 
-    height: 100vh; // Hack transition
+  height: 100vh; // Hack transition
 
-    max-height: 200px;
+  max-height: 200px;
 
-    &:hover {
-        max-height: calc(100vh - (80px + 65px) - (45px + 25px)); // 100vh - (header height - footer height)px
-    }
+  &:hover {
+    max-height: calc(
+      100vh - (80px + 65px) - (45px + 25px)
+    ); // 100vh - (header height - footer height)px
+  }
 }
 
 .no-box {
-    position: absolute;
-    bottom: 65px;
+  position: absolute;
+  bottom: 65px;
 
-    padding: 25px;
+  padding: 25px;
 
-    width: 100%;
+  width: 100%;
 
-    border-radius: 50px 50px 0px 0px;
+  border-radius: 50px 50px 0px 0px;
 
-    background: #eeecec;
+  background: #eeecec;
 
-    color: black;
+  color: black;
 
-    overflow-y: hidden;
+  overflow-y: hidden;
 
-    transition: max-height 0.15s ease-in-out;
+  transition: max-height 0.15s ease-in-out;
 
-    height: 100vh; // Hack transition
+  height: 100vh; // Hack transition
 
-    max-height: 100px;
+  max-height: 100px;
 
-    &:hover {
-        max-height: calc(100vh - (80px + 65px) - (45px + 25px)); // 100vh - (header height - footer height)px
-    }
+  &:hover {
+    max-height: calc(
+      100vh - (80px + 65px) - (45px + 25px)
+    ); // 100vh - (header height - footer height)px
+  }
 }
 
 .text-none {
-    position: absolute;
-    color: #1f2865b9;
-    // top: 50%;
-    transform: translate(0%, 380%);
+  position: absolute;
+  color: #1f2865b9;
+  // top: 50%;
+  transform: translate(0%, 380%);
 
-    @media (max-width: 320px) {
-        transform: translate(0%, 280%);
-    }
+  @media (max-width: 320px) {
+    transform: translate(0%, 280%);
+  }
 }
 </style>

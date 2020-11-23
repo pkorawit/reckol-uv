@@ -14,20 +14,18 @@
           </q-btn>
         </div>
         <div class="row justify-between q-pb-md q-mx-xl">
-          <q-btn
-            dense
-            flat
-            text-color="white"
-            icon="fas fa-home"
-            to="/"
-          ></q-btn>
+          <q-btn dense flat text-color="white" icon="fas fa-home" to="/"
+            ><span class="absolute q-mt-xl">home</span></q-btn
+          >
           <q-btn
             dense
             flat
             text-color="white"
             icon="fas fa-user-alt"
             to="/account"
-          ></q-btn>
+          >
+            <span class="absolute q-mt-xl">account</span>
+          </q-btn>
         </div>
       </div>
     </div>
@@ -39,12 +37,12 @@ export default {
   data() {
     return {
       screen: "",
-      tab: "home",
+      tab: "home"
     };
   },
   mounted() {
     this.screen = this.$q.screen.name;
-  },
+  }
 };
 </script>
 
