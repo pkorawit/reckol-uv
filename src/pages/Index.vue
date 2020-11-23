@@ -35,7 +35,7 @@
     </div>
 
     <div :class="otherBoxClass">
-      <p class="text-h6">From other</p>
+      <p class="text-h6">Share locker</p>
       <!-- <div class="q-ma-md row justify-center">
         <q-btn-group rounded>
           <q-btn rounded color="white" label="My locker" text-color="primary" />

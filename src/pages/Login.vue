@@ -8,8 +8,12 @@
         dark
         type="number"
         mask="###-###-####"
+        hint="ex. 098-xxx-xxxx"
         v-model="tel"
-        class="shadow-10"
+        input-style="text-align:center;"
+        color="secondary"
+        label=" input your phone number to login"
+        autofocus
       ></q-input>
       <div class="q-pt-xl" id="recaptcha-container"></div>
     </div>
@@ -22,13 +26,13 @@ export default {
   data() {
     return {
       tel: "",
-      recaptchaVerifier: null,
+      recaptchaVerifier: null
     };
   },
   methods: {
     async onLogin(response) {
       try {
-        const formatTel = (tel) => `+66${tel.slice(1, 10)}`;
+        const formatTel = tel => `+66${tel.slice(1, 10)}`;
         Loading.show();
         const confirmationResult = await this.$auth().signInWithPhoneNumber(
           formatTel(this.tel),
@@ -41,28 +45,28 @@ export default {
       } catch (error) {
         console.error(error);
       }
-    },
+    }
   },
   watch: {
     tel(val, newVal) {
       if (val.length == 10) {
         this.recaptchaVerifier.render();
       }
-    },
+    }
   },
   mounted() {
     this.recaptchaVerifier = new this.$auth.RecaptchaVerifier(
       "recaptcha-container",
       {
         size: "normal",
-        callback: (response) => this.onLogin(response),
-        "expired-callback": function () {
+        callback: response => this.onLogin(response),
+        "expired-callback": function() {
           // Response expired. Ask user to solve reCAPTCHA again.
           // ...
-        },
+        }
       }
     );
-  },
+  }
 };
 </script>
 
