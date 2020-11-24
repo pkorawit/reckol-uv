@@ -54,7 +54,7 @@ export default {
         .onDismiss(() => {});
     },
     async onOk(targetPhoneNumber) {
-      const randomCode = () => Math.round(Math.random() * 100000);
+      const randomCode = () => Math.floor(100000 + Math.random() * 900000);
       await sendOneTimeCode({
         lockerId: this.lockerId,
         onetimeCode: randomCode().toString(),
