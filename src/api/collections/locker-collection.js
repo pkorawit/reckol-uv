@@ -4,7 +4,7 @@ const lockersCollection = firestore().collection('lockers')
 
 export const setLockerMasterCode = async ({ lockerId, masterCode, owner }) => await lockersCollection.doc(lockerId).update({
     masterCode,
-    owner,
+    ownner: owner,
 })
 
 export const setLockerOneTimeKey = async ({ lockerId, onetimeCode }) => await lockersCollection.doc(lockerId).update({

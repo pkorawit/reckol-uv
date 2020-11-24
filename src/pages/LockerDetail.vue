@@ -1,39 +1,22 @@
 <template>
   <div class="detail">
-    <div class="name text-h4 q-mb-xl">{{ locker.name }}</div>
+    <div class="name text-h4 q-mb-xl">{{ locker.id }}</div>
     <div class="information q-pa-md q-mb-xl">
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Possimus
-      laboriosam error expedita, nesciunt repudiandae deserunt repellat mollitia
-      facere architecto aperiam cupiditate ex animi debitis nemo neque ipsam
-      obcaecati odio voluptate?
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Possimus laboriosam error expedita, nesciunt repudiandae deserunt repellat mollitia facere architecto aperiam cupiditate ex animi debitis nemo neque ipsam obcaecati odio voluptate?
       <br />
       <br />
       See more. . .
     </div>
     <div class="action">
-      <div v-if="!locker.fromOther" class="my-locker flex justify-around">
-        <q-btn
-          color="primary"
-          label="unlock"
-          outline
-          :to="`/scanner?mode=${mode.SELF_UNLOCK}`"
-          class="my-locker-btn"
-        />
-        <q-btn
-          color="primary"
-          label="share locker"
-          outline
-          @click="openSendOneTimeCodeDialog"
-          class="my-locker-btn"
-        />
+      <div v-if="mode === MODE.SELF_UNLOCK" class="my-locker flex justify-around">
+        <q-btn color="primary" label="unlock" outline :to="`/scanner?mode=${MODE.SELF_UNLOCK}&lockerId=${lockerId}`" class="my-locker-btn" />
+        <q-btn color="primary" label="share locker" outline @click="openSendOneTimeCodeDialog" class="my-locker-btn" />
       </div>
-      <div v-if="locker.fromOther" class="from-other">
-        <q-btn
-          color="primary"
-          label="unlock"
-          outline
-          :to="`/scanner?mode=${mode.OTP_UNLOCK}`"
-        />
+      <div v-if="mode === MODE.OTP_UNLOCK" class="my-locker flex justify-around">
+        <q-btn color="primary" label="unlock" outline :to="`/scanner?mode=${MODE.OTP_UNLOCK}&lockerId=${lockerId}`" class="my-locker-btn" />
+      </div>
+      <div v-if="mode === MODE.RENTAL" class="my-locker flex justify-around">
+        <q-btn color="primary" label="Rent" outline :to="`/input-passcode?mode=${MODE.RENTAL}&lockerId=${lockerId}`" class="my-locker-btn" />
       </div>
     </div>
   </div>
@@ -48,9 +31,9 @@ export default {
   data() {
     return {
       locker: {
-        name: "S1",
-        fromOther: false
-      }
+        id: "S1",
+        price: "FREE",
+      },
     };
   },
   methods: {
@@ -61,40 +44,48 @@ export default {
           message: "Input target phone number.",
           prompt: {
             model: "",
-            type: "text" // optional
+            type: "text", // optional
           },
           cancel: true,
-          persistent: true
+          persistent: true,
         })
-        .onOk(target => this.onOk(target))
+        .onOk((target) => this.onOk(target))
         .onCancel(() => {})
         .onDismiss(() => {});
     },
-    async onOk(target) {
-      // await sendOneTimeCode({});
+    async onOk(targetPhoneNumber) {
+      const randomCode = () => Math.round(Math.random() * 100000);
+      await sendOneTimeCode({
+        lockerId: this.lockerId,
+        onetimeCode: randomCode().toString(),
+        targetPhoneNumber,
+      });
       this.onSent();
     },
     onSent() {
       this.$q.dialog({
         title: "Success",
-        message: "OTP Sent"
+        message: "OTP Sent",
       });
-    }
+    },
   },
   computed: {
+    mode() {
+      return this.$route.query.mode;
+    },
     lockerId() {
       return this.$route.query.lockerId;
     },
-    mode() {
+    MODE() {
       return MODE;
-    }
+    },
   },
   async mounted() {
-    // const locker = await getLockerState({
-    //     lockerId: this.lockerId
-    // })
-    // this.locker = locker
-  }
+    const locker = await getLockerState({
+      lockerId: this.lockerId,
+    });
+    this.locker = locker;
+  },
 };
 </script>
 
@@ -103,9 +94,7 @@ export default {
   position: absolute;
   width: 100%;
 
-  height: calc(
-    100vh - (80px + 65px)
-  ); // 100vh - (header height - footer height)px
+  height: calc(100vh - (80px + 65px)); // 100vh - (header height - footer height)px
 
   overflow-y: hidden;
 

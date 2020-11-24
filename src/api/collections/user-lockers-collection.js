@@ -2,20 +2,41 @@ import { firestore } from "firebase"
 
 const userLockersCollection = firestore().collection('user_lockers')
 
-export const addSelfLocker = async ({ userId, locker }) => await userLockersCollection.doc(userId).update({
-    myLockers: firebase.firestore.FieldValue.arrayUnion(locker)
+export const createUserLockers = async ({ userId, phoneNumber }) => await userLockersCollection.doc(userId).set({
+    userId,
+    phoneNumber,
+    myLockers: [],
+    shareLockers: []
 })
+
+export const addSelfLocker = async ({ userId, locker }) => await userLockersCollection.doc(userId).update({
+    myLockers: firestore.FieldValue.arrayUnion(locker)
+})
+
+export const updateSelfLocker = async ({ userId, locker }) => {
+    const snapshot = await userLockersCollection.doc(userId).get()
+    const userLockers = snapshot.data()
+    const index = userLockers.myLockers.findIndex(_ => _.id === locker.id)
+    userLockers.myLockers[index] = locker
+    return await snapshot.ref.update(userLockers)
+}
 
 export const removeSelfLocker = async ({ userId, locker }) => await userLockersCollection.doc(userId).update({
-    myLockers: firebase.firestore.FieldValue.arrayRemove(locker)
+    myLockers: firestore.FieldValue.arrayRemove(locker)
 })
 
-export const addFromOtherLocker = async ({ userId, locker }) => await userLockersCollection.doc(userId).update({
-    fromOthers: firebase.firestore.FieldValue.arrayUnion(locker)
-})
+export const addShareLocker = async ({ phoneNumber, locker }) => {
+    const userLockers = (await userLockersCollection.where('phoneNumber', '==', phoneNumber).get()).docs[0]
+    if (!userLockers) {
+        throw new Error("User Lockers Not Found.")
+    }
+    await userLockers.ref.update({
+        shareLockers: firestore.FieldValue.arrayUnion(locker)
+    })
+}
 
-export const removeFromOtherLocker = async ({ userId, locker }) => await userLockersCollection.doc(userId).update({
-    fromOthers: firebase.firestore.FieldValue.arrayRemove(locker)
+export const removeShareLocker = async ({ userId, locker }) => await userLockersCollection.doc(userId).update({
+    shareLockers: firestore.FieldValue.arrayRemove(locker)
 })
 
 

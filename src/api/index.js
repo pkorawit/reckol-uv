@@ -1,20 +1,15 @@
 import { sendOpenLockerCommand } from "./collections/command-collection"
 import { setLockerMasterCode, setLockerOneTimeKey, getLockerState as _getLockerState, isValidMasterCode, isValidOneTimeCode } from "./collections/locker-collection"
-import { addFromOtherLocker, addSelfLocker, getUserLockers, removeSelfLocker, removeFromOtherLocker } from "./collections/user-lockers-collection"
-
-const userLockerReducer = (_locker) => {
-    const { masterCode, onetimeCode, ...locker } = _locker
-    return locker
-}
+import { addShareLocker, addSelfLocker, getUserLockers, removeSelfLocker, removeShareLocker, updateSelfLocker } from "./collections/user-lockers-collection"
 
 export const rentLocker = async ({ lockerId, passcode, userId }) => {
-    const locker = userLockerReducer(
-        (await getLockerState({ lockerId })).data()
-    )
-
+    const locker = {
+        id: lockerId,
+        ...(await getLockerState({ lockerId })).data()
+    }
 
     await Promise.all([
-        setLockerMasterCode({ userId, lockerId, passcode }),
+        setLockerMasterCode({ lockerId, masterCode: passcode, owner: userId }),
         addSelfLocker({ userId, locker }),
         sendOpenLockerCommand({ lockerId, userId })
     ])
@@ -22,16 +17,17 @@ export const rentLocker = async ({ lockerId, passcode, userId }) => {
     return true
 }
 
-export const sendOneTimeCode = async ({ lockerId, onetimeCode, userId }) => {
-    const locker = userLockerReducer(
-        (await getLockerState({ lockerId })).data()
-    )
+export const sendOneTimeCode = async ({ lockerId, onetimeCode, targetPhoneNumber }) => {
 
-    await Promise.all([
-        setLockerOneTimeKey({ lockerId, onetimeCode }),
-        addFromOtherLocker({ locker, userId }),
-        sendOpenLockerCommand({ lockerId, userId })
-    ])
+    await setLockerOneTimeKey({ lockerId, onetimeCode })
+
+    const locker = {
+        id: lockerId,
+        ...(await getLockerState({ lockerId })).data()
+    }
+
+    await addShareLocker({ locker, phoneNumber: targetPhoneNumber })
+    await updateSelfLocker({ userId: locker.ownner, locker })
 
     return true
 }
@@ -47,9 +43,10 @@ export const unlockSelfLocker = async ({ lockerId, passcode, userId }) => {
         return false
     }
 
-    const locker = userLockerReducer(
-        (await getLockerState({ lockerId })).data()
-    )
+    const locker = {
+        id: lockerId,
+        ...(await getLockerState({ lockerId })).data()
+    }
 
     await Promise.all([
         sendOpenLockerCommand({ lockerId, userId }),
@@ -71,13 +68,15 @@ export const unlockOneTimeLocker = async ({ lockerId, passcode, userId }) => {
         return false
     }
 
-    const locker = userLockerReducer(
-        (await getLockerState({ lockerId })).data()
-    )
+    const locker = {
+        id: lockerId,
+        ...(await getLockerState({ lockerId })).data()
+    }
 
     await Promise.all([
         sendOpenLockerCommand({ lockerId, userId }),
-        removeFromOtherLocker({ userId, locker })
+        removeShareLocker({ userId, locker }),
+        removeSelfLocker({ userId: locker.ownner, locker })
     ])
 
     return true

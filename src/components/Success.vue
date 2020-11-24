@@ -13,21 +13,21 @@
 import CheckMark from "./CheckMark";
 export default {
   props: {
-    title: String
+    title: String,
   },
   components: {
-    CheckMark
+    CheckMark,
   },
   data() {
     return {
-      mock: false
+      mock: false,
     };
   },
   mounted() {
     setTimeout(() => {
       this.mock = true;
     }, 1000);
-  }
+  },
 };
 </script>
 
@@ -40,6 +40,6 @@ export default {
   border-radius: 16px;
 }
 .shadow {
-  filter: drop-shadow(4px 3px 2px $primary);
+  filter: drop-shadow(1px 1px 1px $primary);
 }
 </style>

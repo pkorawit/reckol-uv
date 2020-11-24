@@ -2,60 +2,30 @@
   <div class="column">
     <div class="about">
       <div>
-        <p class="text-h6 ">My locker</p>
+        <p class="text-h6">My locker</p>
         <div>
-          <div v-if="boxes">
-            <div v-for="index in boxes" :key="index">
-              <box class="q-py-xs"></box>
+          <div v-if="myLockers.length > 0">
+            <div v-for="locker in myLockers" :key="locker.id">
+              <locker-list-item :locker="locker" class="q-py-xs"></locker-list-item>
             </div>
           </div>
           <div v-else class="column justify-center items-center">
             <p class="text-h4 text-none text-white">None</p>
           </div>
         </div>
-        <!-- <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates,
-          velit? Doloribus numquam quia debitis ut tempora est accusantium
-          inventore quod. Officiis quibusdam animi aliquam, quod nam totam
-          beatae assumenda ex!
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero, quos
-          culpa! Facere voluptate repellendus error quibusdam omnis quis nulla
-          nostrum necessitatibus ad ipsum eos quia rerum aliquid, reprehenderit
-          sed amet.
-        </p>
-        <p>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa,
-          voluptatibus et soluta velit amet voluptatem reprehenderit quae a,
-          ipsa ad autem reiciendis ratione ea suscipit! Voluptas fugit alias
-          quae adipisci?
-        </p> -->
       </div>
     </div>
 
-    <div :class="otherBoxClass">
+    <div :class="shareLockerClass">
       <p class="text-h6">Share locker</p>
-      <!-- <div class="q-ma-md row justify-center">
-        <q-btn-group rounded>
-          <q-btn rounded color="white" label="My locker" text-color="primary" />
-          <q-btn
-            rounded
-            color="primary"
-            label="From other "
-            text-color="white"
-          />
-        </q-btn-group>
-      </div> -->
-
       <q-scroll-area :delay="1500" class="scroll-area">
-        <div v-if="other">
-          <div v-for="index in other" :key="index">
-            <box class="q-py-xs"></box>
+        <div v-if="shareLockers.length > 0">
+          <div v-for="locker in shareLockers" :key="locker.id">
+            <locker-list-item :locker="locker" class="q-py-xs" :isShareLocker="true"></locker-list-item>
           </div>
         </div>
         <div v-else class="column justify-center items-center">
-          <p class="text-h4 text-none ">None</p>
+          <p class="text-h4 text-none">None</p>
         </div>
       </q-scroll-area>
     </div>
@@ -63,30 +33,39 @@
 </template>
 
 <script>
-import Box from "../components/Box.vue";
+import LockerListItem from "../components/LockerListItem.vue";
 import { QrcodeStream } from "vue-qrcode-reader";
 import PasswordForm from "../components/PasswordForm.vue";
 import { Notify } from "quasar";
+import { getUserLockersView } from "src/api";
 
 export default {
   name: "IndexPage",
   components: {
     QrcodeStream,
-    Box,
-    PasswordForm
+    LockerListItem,
+    PasswordForm,
   },
   data() {
     return {
-      boxes: 5,
-      other: 0
+      myLockers: [],
+      shareLockers: [],
     };
   },
   computed: {
-    otherBoxClass() {
-      const otherBoxExists = !!this.other;
-      return otherBoxExists ? "box" : "no-box";
-    }
-  }
+    shareLockerClass() {
+      const shareLockersBoxExists = !!this.shareLockers;
+      return shareLockersBoxExists ? "box" : "no-box";
+    },
+    user() {
+      return JSON.parse(localStorage.getItem("auth__user"));
+    },
+  },
+  async mounted() {
+    const userLockers = await getUserLockersView({ userId: this.user.uid });
+    this.myLockers = userLockers.myLockers;
+    this.shareLockers = userLockers.shareLockers;
+  },
 };
 </script>
 
@@ -99,9 +78,7 @@ export default {
   position: absolute;
   width: 100%;
 
-  height: calc(
-    100vh - (80px + 65px)
-  ); // 100vh - (header height - footer height)px
+  height: calc(100vh - (80px + 65px)); // 100vh - (header height - footer height)px
 
   overflow-y: scroll;
 
@@ -137,9 +114,7 @@ export default {
   max-height: 200px;
 
   &:hover {
-    max-height: calc(
-      100vh - (80px + 65px) - (45px + 25px)
-    ); // 100vh - (header height - footer height)px
+    max-height: calc(100vh - (80px + 65px) - (45px + 25px)); // 100vh - (header height - footer height)px
   }
 }
 
@@ -166,9 +141,7 @@ export default {
   max-height: 100px;
 
   &:hover {
-    max-height: calc(
-      100vh - (80px + 65px) - (45px + 25px)
-    ); // 100vh - (header height - footer height)px
+    max-height: calc(100vh - (80px + 65px) - (45px + 25px)); // 100vh - (header height - footer height)px
   }
 }
 

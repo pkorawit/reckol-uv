@@ -7,5 +7,5 @@ export const sendOpenLockerCommand = async ({ userId, lockerId }) => await comma
     name: 'open',
     target: lockerId,
     executed: false,
-    startAt: null
+    startAt: Date.now()
 })

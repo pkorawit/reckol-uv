@@ -1,115 +1,100 @@
 <template>
-<div class="background">
+  <div class="background">
     <div>
-        <password-form title="Passcode" @confirmPassword="confirmPassword" />
+      <password-form title="Passcode" @confirmPassword="confirmPassword" />
     </div>
-</div>
+  </div>
 </template>
 
 <script>
-import {
-    MODE
-} from "src/common/constant";
+import { MODE } from "src/common/constant";
 import PasswordForm from "../components/PasswordForm";
-import {
-    rentLocker,
-    unlockOneTimeLocker,
-    unlockSelfLocker
-} from "src/api";
-import {
-    Loading
-} from "quasar";
+import { rentLocker, unlockOneTimeLocker, unlockSelfLocker } from "src/api";
+import { Loading } from "quasar";
 export default {
-    components: {
-        PasswordForm,
+  components: {
+    PasswordForm,
+  },
+  computed: {
+    mode() {
+      return this.$route.query.mode;
     },
-    computed: {
-        mode() {
-            return this.$route.query.mode;
-        },
-        lockerId() {
-            return this.$route.query.lockerId;
-        },
-        user() {
-            return localStorage.getItem("auth__user");
-        },
+    lockerId() {
+      return this.$route.query.lockerId;
     },
-    methods: {
-        async confirmPassword(passcode) {
-            try {
-                Loading.show();
-                //     let isSucceed = false;
-
-                //     if (this.mode == MODE.RENTAL) {
-                //         isSucceed = await rentLocker({
-                //             lockerId: this.lockerId,
-                //             passcode,
-                //             userId: this.user.id,
-                //         });
-                //     }
-
-                //     if (this.mode == MODE.SELF_UNLOCK) {
-                //         isSucceed = await unlockSelfLocker({
-                //             lockerId: this.lockerId,
-                //             passcode,
-                //             userId: this.user.id,
-                //         });
-                //     }
-
-                //     if (this.mode == MODE.OTP_UNLOCK) {
-                //         isSucceed = await unlockOneTimeLocker({
-                //             lockerId: this.lockerId,
-                //             passcode,
-                //             userId: this.user.id,
-                //         });
-                //     }
-
-                // Loading.hide();
-
-                // this.$router.push({
-                //     path: `/success`,
-                // });
-
-                setTimeout(() => {
-                    // for mockup
-                    Loading.hide();
-
-                    this.$router.push({
-                        path: `/success`,
-                    });
-                }, 3000);
-            } catch (error) {
-                this.$q
-                    .dialog({
-                        title: "Alert",
-                        message: "Something went wrong.",
-                    })
-                    .onDismiss(() => {
-                        this.$router.resolve("/");
-                    });
-            }
-        },
+    user() {
+      return JSON.parse(localStorage.getItem("auth__user"));
     },
+  },
+  methods: {
+    async confirmPassword(passcode) {
+      try {
+        Loading.show();
+        let isSucceed = false;
+
+        if (this.mode == MODE.RENTAL) {
+          isSucceed = await rentLocker({
+            lockerId: this.lockerId,
+            passcode,
+            userId: this.user.uid,
+          });
+        }
+
+        if (this.mode == MODE.SELF_UNLOCK) {
+          isSucceed = await unlockSelfLocker({
+            lockerId: this.lockerId,
+            passcode,
+            userId: this.user.uid,
+          });
+        }
+
+        if (this.mode == MODE.OTP_UNLOCK) {
+          isSucceed = await unlockOneTimeLocker({
+            lockerId: this.lockerId,
+            passcode,
+            userId: this.user.uid,
+          });
+        }
+
+        Loading.hide();
+
+        this.$router.push({
+          path: `/success`,
+        });
+      } catch (error) {
+        console.error(error);
+        Loading.hide();
+        this.$q
+          .dialog({
+            title: "Alert",
+            message: "Something went wrong.",
+          })
+          .onDismiss(() => {
+            this.$router.resolve("/");
+          });
+      }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
 .background {
-    position: absolute;
-    width: 100%;
+  position: absolute;
+  width: 100%;
 
-    height: calc(100vh - (80px + 65px));
+  height: calc(100vh - (80px + 65px));
 
-    overflow-y: hidden;
+  overflow-y: hidden;
 
-    border-radius: 50px 50px 0px 0px;
+  border-radius: 50px 50px 0px 0px;
 
-    background: #eeecec;
+  background: #eeecec;
 
-    padding: 25px;
+  padding: 25px;
 
-    p {
-        padding: 15px;
-    }
+  p {
+    padding: 15px;
+  }
 }
 </style>
