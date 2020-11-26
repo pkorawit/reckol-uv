@@ -3,13 +3,28 @@
     <div>
       <div flat class="absolute-bottom scan-btn">
         <div class="absolute ss">
-          <q-btn flat icon="fas fa-qrcode" class="absolute btn" dense to="/scanner?mode=RENTAL">
+          <q-btn
+            flat
+            icon="fas fa-qrcode"
+            class="absolute btn"
+            size="1.5rem"
+            dense
+            to="/scanner?mode=RENTAL"
+          >
             <span class="qr"></span>
           </q-btn>
         </div>
         <div class="row justify-between q-pb-md q-mx-xl">
-          <q-btn dense flat text-color="white" icon="fas fa-home" to="/"><span class="absolute q-mt-xl">home</span></q-btn>
-          <q-btn dense flat text-color="white" icon="fas fa-user-alt" to="/account">
+          <q-btn dense flat text-color="white" icon="fas fa-home" to="/"
+            ><span class="absolute q-mt-xl">home</span></q-btn
+          >
+          <q-btn
+            dense
+            flat
+            text-color="white"
+            icon="fas fa-user-alt"
+            to="/account"
+          >
             <span class="absolute q-mt-xl">account</span>
           </q-btn>
         </div>
@@ -23,12 +38,12 @@ export default {
   data() {
     return {
       screen: "",
-      tab: "home",
+      tab: "home"
     };
   },
   mounted() {
     this.screen = this.$q.screen.name;
-  },
+  }
 };
 </script>
 
@@ -49,7 +64,8 @@ export default {
   position: fixed;
 
   color: #455484;
-  left: calc(50vw - 8px);
+  top: 96%;
+  left: calc(50vw - 18px);
   z-index: 1;
 }
 .btn {
