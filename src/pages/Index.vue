@@ -1,12 +1,15 @@
 <template>
-  <div class="column">
+  <div class="column parent">
     <div class="about">
       <div>
         <p class="text-h6">My locker</p>
         <div>
           <div v-if="myLockers.length > 0">
             <div v-for="locker in myLockers" :key="locker.id">
-              <locker-list-item :locker="locker" class="q-py-xs"></locker-list-item>
+              <locker-list-item
+                :locker="locker"
+                class="q-py-xs"
+              ></locker-list-item>
             </div>
           </div>
           <div v-else class="column justify-center items-center">
@@ -21,7 +24,11 @@
       <q-scroll-area :delay="1500" class="scroll-area">
         <div v-if="shareLockers.length > 0">
           <div v-for="locker in shareLockers" :key="locker.id">
-            <locker-list-item :locker="locker" class="q-py-xs" :isShareLocker="true"></locker-list-item>
+            <locker-list-item
+              :locker="locker"
+              class="q-py-xs"
+              :isShareLocker="true"
+            ></locker-list-item>
           </div>
         </div>
         <div v-else class="column justify-center items-center">
@@ -38,18 +45,25 @@ import { QrcodeStream } from "vue-qrcode-reader";
 import PasswordForm from "../components/PasswordForm.vue";
 import { Notify } from "quasar";
 import { getUserLockersView } from "src/api";
+import { gsap } from "gsap";
 
 export default {
   name: "IndexPage",
   components: {
     QrcodeStream,
     LockerListItem,
-    PasswordForm,
+    PasswordForm
+  },
+  mounted() {
+    gsap.to(".parent", 1, {
+      opacity: 0,
+      x: 500
+    });
   },
   data() {
     return {
       myLockers: [],
-      shareLockers: [],
+      shareLockers: []
     };
   },
   computed: {
@@ -59,17 +73,20 @@ export default {
     },
     user() {
       return JSON.parse(localStorage.getItem("auth__user"));
-    },
+    }
   },
   async mounted() {
     const userLockers = await getUserLockersView({ userId: this.user.uid });
     this.myLockers = userLockers.myLockers;
     this.shareLockers = userLockers.shareLockers;
-  },
+  }
 };
 </script>
 
 <style lang="scss" scoped>
+.parent {
+  opacity: 1;
+}
 .scroll-area {
   height: 100%;
 }
@@ -78,7 +95,9 @@ export default {
   position: absolute;
   width: 100%;
 
-  height: calc(100vh - (80px + 65px)); // 100vh - (header height - footer height)px
+  height: calc(
+    100vh - (80px + 65px)
+  ); // 100vh - (header height - footer height)px
 
   overflow-y: scroll;
 
@@ -114,7 +133,9 @@ export default {
   max-height: 200px;
 
   &:hover {
-    max-height: calc(100vh - (80px + 65px) - (45px + 25px)); // 100vh - (header height - footer height)px
+    max-height: calc(
+      100vh - (80px + 65px) - (45px + 25px)
+    ); // 100vh - (header height - footer height)px
   }
 }
 
@@ -141,7 +162,9 @@ export default {
   max-height: 100px;
 
   &:hover {
-    max-height: calc(100vh - (80px + 65px) - (45px + 25px)); // 100vh - (header height - footer height)px
+    max-height: calc(
+      100vh - (80px + 65px) - (45px + 25px)
+    ); // 100vh - (header height - footer height)px
   }
 }
 

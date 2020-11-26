@@ -2,21 +2,54 @@
   <div class="detail">
     <div class="name text-h4 q-mb-xl">{{ locker.id }}</div>
     <div class="information q-pa-md q-mb-xl">
-      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Possimus laboriosam error expedita, nesciunt repudiandae deserunt repellat mollitia facere architecto aperiam cupiditate ex animi debitis nemo neque ipsam obcaecati odio voluptate?
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Possimus
+      laboriosam error expedita, nesciunt repudiandae deserunt repellat mollitia
+      facere architecto aperiam cupiditate ex animi debitis nemo neque ipsam
+      obcaecati odio voluptate?
       <br />
       <br />
       See more. . .
     </div>
     <div class="action">
-      <div v-if="mode === MODE.SELF_UNLOCK" class="my-locker flex justify-around">
-        <q-btn color="primary" label="unlock" outline :to="`/scanner?mode=${MODE.SELF_UNLOCK}&lockerId=${lockerId}`" class="my-locker-btn" />
-        <q-btn color="primary" label="share locker" outline @click="openSendOneTimeCodeDialog" class="my-locker-btn" />
+      <div
+        v-if="mode === MODE.SELF_UNLOCK"
+        class="my-locker flex justify-around"
+      >
+        <q-btn
+          color="primary"
+          label="unlock"
+          outline
+          :to="`/scanner?mode=${MODE.SELF_UNLOCK}&lockerId=${lockerId}`"
+          class="my-locker-btn"
+        />
+        <q-btn
+          color="primary"
+          label="share locker"
+          outline
+          @click="openSendOneTimeCodeDialog"
+          class="my-locker-btn"
+        />
       </div>
-      <div v-if="mode === MODE.OTP_UNLOCK" class="my-locker flex justify-around">
-        <q-btn color="primary" label="unlock" outline :to="`/scanner?mode=${MODE.OTP_UNLOCK}&lockerId=${lockerId}`" class="my-locker-btn" />
+      <div
+        v-if="mode === MODE.OTP_UNLOCK"
+        class="my-locker flex justify-around"
+      >
+        <q-btn
+          color="primary"
+          label="unlock"
+          outline
+          :to="`/scanner?mode=${MODE.OTP_UNLOCK}&lockerId=${lockerId}`"
+          class="my-locker-btn"
+        />
       </div>
       <div v-if="mode === MODE.RENTAL" class="my-locker flex justify-around">
-        <q-btn color="primary" label="Rent" outline :to="`/input-passcode?mode=${MODE.RENTAL}&lockerId=${lockerId}`" class="my-locker-btn" />
+        <q-btn
+          color="primary"
+          label="Rent"
+          outline
+          :to="`/input-passcode?mode=${MODE.RENTAL}&lockerId=${lockerId}`"
+          class="my-locker-btn"
+        />
       </div>
     </div>
   </div>
@@ -26,14 +59,15 @@
 import { sendOneTimeCode } from "src/api";
 import { getLockerState } from "src/api/collections/locker-collection";
 import { MODE } from "src/common/constant";
+import { gsap } from "gsap";
 
 export default {
   data() {
     return {
       locker: {
         id: "S1",
-        price: "FREE",
-      },
+        price: "FREE"
+      }
     };
   },
   methods: {
@@ -44,12 +78,12 @@ export default {
           message: "Input target phone number.",
           prompt: {
             model: "",
-            type: "text", // optional
+            type: "text" // optional
           },
           cancel: true,
-          persistent: true,
+          persistent: true
         })
-        .onOk((target) => this.onOk(target))
+        .onOk(target => this.onOk(target))
         .onCancel(() => {})
         .onDismiss(() => {});
     },
@@ -58,16 +92,16 @@ export default {
       await sendOneTimeCode({
         lockerId: this.lockerId,
         onetimeCode: randomCode().toString(),
-        targetPhoneNumber,
+        targetPhoneNumber
       });
       this.onSent();
     },
     onSent() {
       this.$q.dialog({
         title: "Success",
-        message: "OTP Sent",
+        message: "OTP Sent"
       });
-    },
+    }
   },
   computed: {
     mode() {
@@ -78,14 +112,17 @@ export default {
     },
     MODE() {
       return MODE;
-    },
+    }
   },
   async mounted() {
+    gsap.from(".detail", 1, {
+      opacity: 0
+    });
     const locker = await getLockerState({
-      lockerId: this.lockerId,
+      lockerId: this.lockerId
     });
     this.locker = locker;
-  },
+  }
 };
 </script>
 
@@ -94,7 +131,9 @@ export default {
   position: absolute;
   width: 100%;
 
-  height: calc(100vh - (80px + 65px)); // 100vh - (header height - footer height)px
+  height: calc(
+    100vh - (80px + 65px)
+  ); // 100vh - (header height - footer height)px
 
   overflow-y: hidden;
 
@@ -105,6 +144,7 @@ export default {
   color: white;
 
   padding: 25px;
+  opacity: 1;
 
   .name {
     color: white;

@@ -11,9 +11,15 @@ import { MODE } from "src/common/constant";
 import PasswordForm from "../components/PasswordForm";
 import { rentLocker, unlockOneTimeLocker, unlockSelfLocker } from "src/api";
 import { Loading } from "quasar";
+import { gsap } from "gsap";
 export default {
   components: {
-    PasswordForm,
+    PasswordForm
+  },
+  mounted() {
+    gsap.from(".background", 1, {
+      opacity: 0
+    });
   },
   computed: {
     mode() {
@@ -24,7 +30,7 @@ export default {
     },
     user() {
       return JSON.parse(localStorage.getItem("auth__user"));
-    },
+    }
   },
   methods: {
     async confirmPassword(passcode) {
@@ -36,7 +42,7 @@ export default {
           isSucceed = await rentLocker({
             lockerId: this.lockerId,
             passcode,
-            userId: this.user.uid,
+            userId: this.user.uid
           });
         }
 
@@ -44,7 +50,7 @@ export default {
           isSucceed = await unlockSelfLocker({
             lockerId: this.lockerId,
             passcode,
-            userId: this.user.uid,
+            userId: this.user.uid
           });
         }
 
@@ -52,14 +58,14 @@ export default {
           isSucceed = await unlockOneTimeLocker({
             lockerId: this.lockerId,
             passcode,
-            userId: this.user.uid,
+            userId: this.user.uid
           });
         }
 
         Loading.hide();
 
         this.$router.push({
-          path: `/success`,
+          path: `/success`
         });
       } catch (error) {
         console.error(error);
@@ -67,14 +73,14 @@ export default {
         this.$q
           .dialog({
             title: "Alert",
-            message: "Something went wrong.",
+            message: "Something went wrong."
           })
           .onDismiss(() => {
             this.$router.resolve("/");
           });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -90,6 +96,8 @@ export default {
   border-radius: 50px 50px 0px 0px;
 
   background: #eeecec;
+
+  opacity: 1;
 
   padding: 25px;
 

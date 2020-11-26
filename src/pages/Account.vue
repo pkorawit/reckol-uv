@@ -1,5 +1,5 @@
 <template>
-  <div class="background">
+  <div class="background parent">
     <p class="text-h5">Account</p>
     <q-card class="card">
       <q-card-section>
@@ -9,7 +9,12 @@
               class="bg-primary"
               style="height:180px; max-width: 180px;border-radius:50%"
             >
-              <p class="text-white">no image</p>
+              <q-icon
+                class="q-pa-xl"
+                color="gray"
+                name="fas fa-user-alt"
+                size="90px"
+              ></q-icon>
             </q-img>
           </div>
           <div>
@@ -30,7 +35,13 @@
 </template>
 
 <script>
+import { gsap } from "gsap";
 export default {
+  mounted() {
+    gsap.from(".parent", 1, {
+      opacity: 0
+    });
+  },
   data() {
     return {
       name: "name naja"
@@ -40,6 +51,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.parent {
+  opacity: 1;
+}
 .background {
   position: absolute;
   width: 100%;
