@@ -14,7 +14,7 @@
             <span class="qr"></span>
           </q-btn>
         </div>
-        <div class="row justify-between q-pb-md q-mx-xl">
+        <div class="row justify-between q-mb-lg q-mx-xl">
           <q-btn dense flat text-color="white" icon="fas fa-home" to="/"
             ><span class="absolute q-mt-xl">home</span></q-btn
           >
@@ -65,7 +65,8 @@ export default {
 
   color: #455484;
   top: 96%;
-  left: calc(50vw - 18px);
+  left: calc(50vw - 23px);
+
   z-index: 1;
 }
 .btn {
