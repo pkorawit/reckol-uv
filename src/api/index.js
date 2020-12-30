@@ -1,5 +1,5 @@
-import { sendOpenLockerCommand } from "./collections/command-collection"
-import { setLockerMasterCode, setLockerOneTimeKey, getLockerState as _getLockerState, isValidMasterCode, isValidOneTimeCode } from "./collections/locker-collection"
+import { sendOpenLockerCommand, } from "./collections/command-collection"
+import { setLockerMasterCode, setLockerOneTimeKey, getLockerState as _getLockerState, isValidMasterCode, isValidOneTimeCode, setLockerStatus } from "./collections/locker-collection"
 import { addShareLocker, addSelfLocker, getUserLockers, removeSelfLocker, removeShareLocker, updateSelfLocker } from "./collections/user-lockers-collection"
 
 export const rentLocker = async ({ lockerId, passcode, userId }) => {
@@ -11,7 +11,8 @@ export const rentLocker = async ({ lockerId, passcode, userId }) => {
     await Promise.all([
         setLockerMasterCode({ lockerId, masterCode: passcode, owner: userId }),
         addSelfLocker({ userId, locker }),
-        sendOpenLockerCommand({ lockerId, userId })
+        sendOpenLockerCommand({ lockerId, userId }),
+        setLockerStatus({ lockerId, status: 'occupied' })
     ])
 
     return true
@@ -48,9 +49,12 @@ export const unlockSelfLocker = async ({ lockerId, passcode, userId }) => {
         ...(await getLockerState({ lockerId })).data()
     }
 
+    console.log({ lockerId, passcode, userId });
+
     await Promise.all([
         sendOpenLockerCommand({ lockerId, userId }),
-        removeSelfLocker({ userId, locker })
+        removeSelfLocker({ userId, locker }),
+        setLockerStatus({ lockerId, status: 'available' })
     ])
 
 
@@ -76,7 +80,8 @@ export const unlockOneTimeLocker = async ({ lockerId, passcode, userId }) => {
     await Promise.all([
         sendOpenLockerCommand({ lockerId, userId }),
         removeShareLocker({ userId, locker }),
-        removeSelfLocker({ userId: locker.ownner, locker })
+        removeSelfLocker({ userId: locker.ownner, locker }),
+        setLockerStatus({ lockerId, status: 'available' })
     ])
 
     return true

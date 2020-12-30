@@ -10,15 +10,15 @@
 import { MODE } from "src/common/constant";
 import PasswordForm from "../components/PasswordForm";
 import { rentLocker, unlockOneTimeLocker, unlockSelfLocker } from "src/api";
-import { Loading } from "quasar";
+import { Dialog, Loading } from "quasar";
 import { gsap } from "gsap";
 export default {
   components: {
-    PasswordForm
+    PasswordForm,
   },
   mounted() {
     gsap.from(".background", 1, {
-      opacity: 0
+      opacity: 0,
     });
   },
   computed: {
@@ -30,19 +30,20 @@ export default {
     },
     user() {
       return JSON.parse(localStorage.getItem("auth__user"));
-    }
+    },
   },
   methods: {
     async confirmPassword(passcode) {
       try {
         Loading.show();
         let isSucceed = false;
+        const userId = this.user.phoneNumber.replace("+66", "0");
 
         if (this.mode == MODE.RENTAL) {
           isSucceed = await rentLocker({
             lockerId: this.lockerId,
             passcode,
-            userId: this.user.uid
+            userId: userId,
           });
         }
 
@@ -50,7 +51,7 @@ export default {
           isSucceed = await unlockSelfLocker({
             lockerId: this.lockerId,
             passcode,
-            userId: this.user.uid
+            userId: userId,
           });
         }
 
@@ -58,14 +59,21 @@ export default {
           isSucceed = await unlockOneTimeLocker({
             lockerId: this.lockerId,
             passcode,
-            userId: this.user.uid
+            userId: userId,
           });
         }
 
         Loading.hide();
 
+        if (!isSucceed) {
+          return Dialog.create({
+            title: "Warning",
+            message: "Invalid Passcode",
+          });
+        }
+
         this.$router.push({
-          path: `/success`
+          path: `/success`,
         });
       } catch (error) {
         console.error(error);
@@ -73,14 +81,14 @@ export default {
         this.$q
           .dialog({
             title: "Alert",
-            message: "Something went wrong."
+            message: "Something went wrong.",
           })
           .onDismiss(() => {
             this.$router.resolve("/");
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

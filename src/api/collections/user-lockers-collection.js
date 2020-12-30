@@ -2,7 +2,7 @@ import { firestore } from "firebase"
 
 const userLockersCollection = firestore().collection('user_lockers')
 
-export const createUserLockers = async ({ userId, phoneNumber }) => await userLockersCollection.doc(userId).set({
+export const createUserLockers = async ({ userId, phoneNumber }) => await userLockersCollection.doc(phoneNumber).set({
     userId,
     phoneNumber,
     myLockers: [],
@@ -10,7 +10,10 @@ export const createUserLockers = async ({ userId, phoneNumber }) => await userLo
 })
 
 export const addSelfLocker = async ({ userId, locker }) => await userLockersCollection.doc(userId).update({
-    myLockers: firestore.FieldValue.arrayUnion(locker)
+    myLockers: firestore.FieldValue.arrayUnion({
+        ...locker,
+        status: 'occupied'
+    })
 })
 
 export const updateSelfLocker = async ({ userId, locker }) => {
@@ -31,7 +34,10 @@ export const addShareLocker = async ({ phoneNumber, locker }) => {
         throw new Error("User Lockers Not Found.")
     }
     await userLockers.ref.update({
-        shareLockers: firestore.FieldValue.arrayUnion(locker)
+        shareLockers: firestore.FieldValue.arrayUnion({
+            ...locker,
+            status: 'occupied'
+        })
     })
 }
 

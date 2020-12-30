@@ -3,11 +3,11 @@
     <p class="text-h5">Account</p>
     <q-card class="card">
       <q-card-section>
-        <div class="flex column  justify-between">
+        <div class="flex column justify-between">
           <div class="row justify-center">
             <q-img
               class="bg-primary"
-              style="height:180px; max-width: 180px;border-radius:50%"
+              style="height: 180px; max-width: 180px; border-radius: 50%"
             >
               <q-icon
                 class="q-pa-xl"
@@ -18,15 +18,11 @@
             </q-img>
           </div>
           <div>
-            <q-input
-              v-model="name"
-              disable
-              input-style="text-align:center"
-            ></q-input>
+            <q-input v-model="name" disable input-style="text-align:center"></q-input>
           </div>
           <q-space />
-          <div class=" q-pa-lg row justify-center " style="margin-top:25%">
-            <q-btn outline color="negative"> sign out</q-btn>
+          <div class="q-pa-lg row justify-center" style="margin-top: 25%">
+            <q-btn outline color="negative" @click="signOut"> sign out</q-btn>
           </div>
         </div>
       </q-card-section>
@@ -39,14 +35,20 @@ import { gsap } from "gsap";
 export default {
   mounted() {
     gsap.from(".parent", 1, {
-      opacity: 0
+      opacity: 0,
     });
   },
   data() {
     return {
-      name: "name naja"
+      name: "name naja",
     };
-  }
+  },
+  methods: {
+    signOut() {
+      localStorage.removeItem("auth__user");
+      this.$router.push("/login");
+    },
+  },
 };
 </script>
 
@@ -58,9 +60,7 @@ export default {
   position: absolute;
   width: 100%;
 
-  height: calc(
-    100vh - (80px + 65px)
-  ); // 100vh - (header height - footer height)px
+  height: calc(100vh - (80px + 65px)); // 100vh - (header height - footer height)px
 
   overflow-y: hidden;
 

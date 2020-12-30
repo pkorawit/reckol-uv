@@ -4,7 +4,7 @@
       <p class="text-h6 title">{{ title }}</p>
     </div>
     <div class="row justify-center q-mt-xl">
-      <check-mark :isCompleted="mock" class="shadow"></check-mark>
+      <check-mark :isCompleted="isCompleted" class="shadow"></check-mark>
     </div>
   </div>
 </template>
@@ -20,12 +20,13 @@ export default {
   },
   data() {
     return {
-      mock: false,
+      isCompleted: false,
     };
   },
   mounted() {
     setTimeout(() => {
-      this.mock = true;
+      this.isCompleted = true;
+      this.$emit("completed");
     }, 1000);
   },
 };

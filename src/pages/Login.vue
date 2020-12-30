@@ -4,11 +4,30 @@
       <p class="text-h4 product-name">uvbox</p>
     </div>
     <div class="absolute input" v-if="mode === 'PHONE_INPUT'">
-      <q-input dark type="number" mask="###-###-####" hint="ex. 098-xxx-xxxx" v-model="tel" input-style="text-align:center;" color="secondary" label="กรอกเบอร์โทรศัพท์เพื่อรับ OTP" autofocus></q-input>
+      <q-input
+        dark
+        type="number"
+        mask="###-###-####"
+        hint="ex. 098-xxx-xxxx"
+        v-model="tel"
+        input-style="text-align:center;"
+        color="secondary"
+        label="กรอกเบอร์โทรศัพท์เพื่อรับ OTP"
+        autofocus
+      ></q-input>
       <div class="q-pt-xl" id="recaptcha-container"></div>
     </div>
     <div class="absolute input" v-if="mode === 'OTP_INPUT'">
-      <q-input dark type="number" hint="ex. xxxxxx" v-model="otp" input-style="text-align:center;" color="secondary" label="กรอก OTP ที่ได้รับ" autofocus></q-input>
+      <q-input
+        dark
+        type="number"
+        hint="ex. xxxxxx"
+        v-model="otp"
+        input-style="text-align:center;"
+        color="secondary"
+        label="กรอก OTP ที่ได้รับ"
+        autofocus
+      ></q-input>
     </div>
   </div>
 </template>
@@ -33,7 +52,10 @@ export default {
       try {
         const formatTel = (tel) => `+66${tel.slice(1, 10)}`;
         Loading.show();
-        this.confirmationResult = await this.$auth().signInWithPhoneNumber(formatTel(this.tel), this.recaptchaVerifier);
+        this.confirmationResult = await this.$auth().signInWithPhoneNumber(
+          formatTel(this.tel),
+          this.recaptchaVerifier
+        );
         this.mode = "OTP_INPUT";
         Loading.hide();
       } catch (error) {
@@ -46,11 +68,16 @@ export default {
         const result = await this.confirmationResult.confirm(this.otp);
 
         if (result.additionalUserInfo.isNewUser) {
-          createUserLockers({ userId: result.user.uid, phoneNumber: this.tel });
-          createUserProfiles({
-            userId: result.user.uid,
-            phoneNumber: this.tel,
-          });
+          await Promise.all([
+            createUserLockers({
+              userId: result.user.uid,
+              phoneNumber: this.tel,
+            }),
+            createUserProfiles({
+              userId: result.user.uid,
+              phoneNumber: this.tel,
+            }),
+          ]);
         }
 
         localStorage.setItem("auth__user", JSON.stringify(result.user));

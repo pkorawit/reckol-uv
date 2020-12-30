@@ -1,7 +1,7 @@
 <template>
   <div class="background">
     <div v-if="loading" class="loading">
-      <q-spinner class=" spinner " color="primary" size="3em" />
+      <q-spinner class="spinner" color="primary" size="3em" />
     </div>
     <div>
       <qrcode-stream @decode="onDecode" @init="onInit" class="qr-scanner">
@@ -12,12 +12,13 @@
 
 <script>
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
-import { Loading } from "quasar";
+import { Dialog, Loading } from "quasar";
 import { MODE } from "../common/constant";
+import { getLockerState } from "src/api/collections/locker-collection";
 
 export default {
   components: {
-    QrcodeStream
+    QrcodeStream,
   },
   computed: {
     mode() {
@@ -25,24 +26,34 @@ export default {
     },
     lockerId() {
       return this.$route.query.lockerId;
-    }
+    },
   },
   methods: {
-    onDecode(lockerId) {
+    async onDecode(lockerId) {
       lockerId = "S2"; //mock
       if (this.mode === MODE.RENTAL) {
+        const lockerState = await getLockerState({ lockerId });
+        if (lockerState.data().status === "occupied") {
+          Dialog.create({
+            title: "Warning",
+            message: "Locker not available",
+          });
+          return this.$router.push({
+            path: `/`,
+          });
+        }
         this.$router.push({
-          path: `/detail?mode=${this.mode}&lockerId=${lockerId}`
+          path: `/detail?mode=${this.mode}&lockerId=${lockerId}`,
         });
       }
       if (this.mode === MODE.SELF_UNLOCK) {
         this.$router.push({
-          path: `/input-passcode?mode=${this.mode}&lockerId=${lockerId}`
+          path: `/input-passcode?mode=${this.mode}&lockerId=${lockerId}`,
         });
       }
       if (this.mode === MODE.OTP_UNLOCK) {
         this.$router.push({
-          path: `/input-passcode?mode=${this.mode}&lockerId=${lockerId}`
+          path: `/input-passcode?mode=${this.mode}&lockerId=${lockerId}`,
         });
       }
     },
@@ -72,7 +83,7 @@ export default {
         // console.log("camera is ready");
         this.loading = false;
       }
-    }
+    },
   },
   mounted() {
     setTimeout(() => {
@@ -82,9 +93,9 @@ export default {
   },
   data() {
     return {
-      loading: true
+      loading: true,
     };
-  }
+  },
 };
 </script>
 

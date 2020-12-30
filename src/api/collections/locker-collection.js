@@ -7,6 +7,10 @@ export const setLockerMasterCode = async ({ lockerId, masterCode, owner }) => aw
     ownner: owner,
 })
 
+export const setLockerStatus = async ({ lockerId, status }) => await lockersCollection.doc(lockerId).update({
+    status
+})
+
 export const setLockerOneTimeKey = async ({ lockerId, onetimeCode }) => await lockersCollection.doc(lockerId).update({
     onetimeCode,
 })

@@ -28,8 +28,8 @@ export default function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
-    let login = localStorage.getItem('isLogin')
-    if (to.name !== 'Login' && !login) next({ name: 'Login' })
+    let user = localStorage.getItem('auth__user')
+    if (to.name !== 'Login' && !user) next({ name: 'Login' })
     else next()
   })
 
