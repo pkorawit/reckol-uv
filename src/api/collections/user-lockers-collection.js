@@ -11,6 +11,7 @@ export const createUserLockers = async ({ userId, phoneNumber }) => await userLo
 
 export const addSelfLocker = async ({ userId, locker }) => await userLockersCollection.doc(userId).update({
     myLockers: firestore.FieldValue.arrayUnion({
+        createdAt: new Date(),
         ...locker,
         status: 'occupied'
     })
@@ -24,9 +25,12 @@ export const updateSelfLocker = async ({ userId, locker }) => {
     return await snapshot.ref.update(userLockers)
 }
 
-export const removeSelfLocker = async ({ userId, locker }) => await userLockersCollection.doc(userId).update({
-    myLockers: firestore.FieldValue.arrayRemove(locker)
-})
+export const removeSelfLocker = async ({ userId, locker }) => {
+    const snapshot = await userLockersCollection.doc(userId).get()
+    const userLockers = snapshot.data()
+    userLockers.myLockers = userLockers.myLockers.filter((x) => x.id !== locker.id)
+    return await snapshot.ref.update(userLockers)
+}
 
 export const addShareLocker = async ({ phoneNumber, locker }) => {
     const userLockers = (await userLockersCollection.where('phoneNumber', '==', phoneNumber).get()).docs[0]
@@ -35,15 +39,19 @@ export const addShareLocker = async ({ phoneNumber, locker }) => {
     }
     await userLockers.ref.update({
         shareLockers: firestore.FieldValue.arrayUnion({
+            createdAt: new Date(),
             ...locker,
             status: 'occupied'
         })
     })
 }
 
-export const removeShareLocker = async ({ userId, locker }) => await userLockersCollection.doc(userId).update({
-    shareLockers: firestore.FieldValue.arrayRemove(locker)
-})
+export const removeShareLocker = async ({ userId, locker }) => {
+    const snapshot = await userLockersCollection.doc(userId).get()
+    const userLockers = snapshot.data()
+    userLockers.shareLockers = userLockers.shareLockers.filter((x) => x.id !== locker.id)
+    return await snapshot.ref.update(userLockers)
+}
 
 
 export const getUserLockers = async ({ userId }) => {

@@ -7,6 +7,13 @@ export const setLockerMasterCode = async ({ lockerId, masterCode, owner }) => aw
     ownner: owner,
 })
 
+export const setLockerSharing = async ({ lockerId, isSharing, targetPhoneNumber }) => await lockersCollection.doc(lockerId).update({
+    sharing: {
+        targetPhoneNumber,
+        isSharing
+    }
+})
+
 export const setLockerStatus = async ({ lockerId, status }) => await lockersCollection.doc(lockerId).update({
     status
 })

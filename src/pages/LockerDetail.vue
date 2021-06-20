@@ -16,18 +16,39 @@
         class="my-locker flex justify-around"
       >
         <q-btn
-          color="primary"
+          :disable="isSterilizing"
+          :color="actionBtnColor"
           label="unlock"
           outline
           :to="`/scanner?mode=${MODE.SELF_UNLOCK}&lockerId=${lockerId}`"
-          class="my-locker-btn"
+          :class="`${actionBtnClass} q-mr-md`"
         />
         <q-btn
-          color="primary"
-          label="share locker"
+          v-if="!isSharing"
+          :disable="isSterilizing"
+          :color="actionBtnColor"
+          label="share"
           outline
           @click="openSendOneTimeCodeDialog"
-          class="my-locker-btn"
+          :class="`${actionBtnClass} q-ml-md`"
+        />
+        <q-btn
+          v-if="isSharing"
+          :disable="isSterilizing"
+          color="negative"
+          label="cancel share"
+          outline
+          @click="cancelShareLocker"
+          style="font-size: 20px"
+          :class="`${actionBtnClass} q-ml-md`"
+        />
+        <q-btn
+          :disable="isSterilizing"
+          :color="sterilizeBtnColor"
+          label="sterilize"
+          outline
+          @click="sterilize"
+          :class="sterilizeBtnClass"
         />
       </div>
       <div
@@ -35,20 +56,25 @@
         class="my-locker flex justify-around"
       >
         <q-btn
-          color="primary"
+          :disable="isSterilizing"
+          :color="actionBtnColor"
           label="unlock"
           outline
           :to="`/scanner?mode=${MODE.OTP_UNLOCK}&lockerId=${lockerId}`"
-          class="my-locker-btn"
+          :class="`${actionBtnClass}`"
         />
       </div>
-      <div v-if="mode === MODE.RENTAL" class="my-locker flex justify-around">
+      <div
+        v-if="mode === MODE.RENTAL"
+        class="my-locker flex justify-around"
+      >
         <q-btn
-          color="primary"
+          :disable="isSterilizing"
+          :color="actionBtnColor"
           label="Rent"
           outline
           :to="`/input-passcode?mode=${MODE.RENTAL}&lockerId=${lockerId}`"
-          class="my-locker-btn"
+          :class="`${actionBtnClass}`"
         />
       </div>
     </div>
@@ -56,10 +82,12 @@
 </template>
 
 <script>
-import { sendOneTimeCode } from "src/api";
+import { sendOneTimeCode, cancelShareLocker } from "src/api";
 import { getLockerState } from "src/api/collections/locker-collection";
 import { MODE } from "src/common/constant";
 import { gsap } from "gsap";
+import { sentSterilizeLockerCommand } from 'src/api/collections/command-collection';
+import { getSterilizeStatus } from 'src/api/collections/sterilize-collection';
 
 export default {
   data() {
@@ -67,10 +95,25 @@ export default {
       locker: {
         id: "S1",
         price: "FREE"
-      }
+      },
+      sterilizing: false,
+      setting: null
     };
   },
   methods: {
+    async fetchLocker() {
+      const locker = await getLockerState({
+        lockerId: this.lockerId
+      });
+      const sterilizeStatus = await getSterilizeStatus({
+        lockerId: this.lockerId
+      })
+      this.sterilizing = sterilizeStatus.data().sterilizeStatus
+      this.locker = {
+        ...locker.data(),
+        id: this.lockerId,
+      };
+    },
     openSendOneTimeCodeDialog() {
       this.$q
         .dialog({
@@ -84,23 +127,57 @@ export default {
           persistent: true
         })
         .onOk(target => this.onOk(target))
-        .onCancel(() => {})
-        .onDismiss(() => {});
+        .onCancel(() => { })
+        .onDismiss(() => { });
     },
     async onOk(targetPhoneNumber) {
       const randomCode = () => Math.floor(100000 + Math.random() * 900000);
-      await sendOneTimeCode({
+      const [error] = await sendOneTimeCode({
         lockerId: this.lockerId,
         onetimeCode: randomCode().toString(),
         targetPhoneNumber
       });
+      if (error) {
+        return this.$q.dialog({
+          title: "Error",
+          message: "Can't share locker please contact operator."
+        });
+      }
+      await this.fetchLocker()
       this.onSent();
     },
     onSent() {
       this.$q.dialog({
         title: "Success",
-        message: "OTP Sent"
+        message: "Share locker success."
       });
+    },
+    async sterilize() {
+      const isConfirmed = confirm(`Sterilizesss?`)
+      if (!isConfirmed) {
+        return
+      }
+      const userId = this.user.phoneNumber.replace("+66", "0");
+      await sentSterilizeLockerCommand({
+        lockerId: this.lockerId,
+        userId
+      })
+      return this.$router.push({
+        path: `/`,
+      });
+    },
+    async cancelShareLocker() {
+      const isConfirmed = confirm(`Cancel share locker ${this.lockerId}`)
+      if (!isConfirmed) {
+        return
+      }
+      await cancelShareLocker({ locker: this.locker })
+      this.$q.dialog({
+        title: "Success",
+        message: "Share locker success."
+      }).onDismiss(() => this.$router.push({
+        path: `/`,
+      }))
     }
   },
   computed: {
@@ -112,16 +189,38 @@ export default {
     },
     MODE() {
       return MODE;
+    },
+    user() {
+      return JSON.parse(localStorage.getItem("auth__user"));
+    },
+    isSterilizing() {
+      return this.sterilizing
+    },
+    actionBtnClass() {
+      return this.isSterilizing ? `my-locker-btn disable-btn` : `my-locker-btn`
+    },
+    sterilizeBtnClass() {
+      return this.isSterilizing ? `my-locker-sterilize-btn disable-btn q-mt-lg` : `my-locker-sterilize-btn q-mt-lg`
+    },
+    actionBtnColor() {
+      return this.isSterilizing ? `grey` : `primary`
+    },
+    sterilizeBtnColor() {
+      return this.isSterilizing ? `grey` : `primary`
+    },
+    isSharing() {
+      return this.locker.sharing.isSharing
     }
   },
   async mounted() {
-    gsap.from(".detail", 1, {
-      opacity: 0
-    });
-    const locker = await getLockerState({
-      lockerId: this.lockerId
-    });
-    this.locker = locker;
+    try {
+      gsap.from(".detail", 1, {
+        opacity: 0
+      });
+      await this.fetchLocker()
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
 </script>
@@ -165,10 +264,19 @@ export default {
   .action {
     .my-locker {
       .my-locker-btn {
-        width: 150px;
-        height: 150px;
+        width: 45%;
+        height: 75px;
         font-size: 30px;
         border-radius: 25px;
+      }
+      .my-locker-sterilize-btn {
+        width: 100%;
+        height: 75px;
+        font-size: 30px;
+        border-radius: 25px;
+      }
+      .disable-btn {
+        color: grey;
       }
     }
   }

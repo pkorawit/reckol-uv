@@ -4,11 +4,15 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
+    "predeploy": "npm run build",
     "public": "dist/pwa",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ]
+  },
+  "functions": {
+    "predeploy": "npm run build"
   }
 }

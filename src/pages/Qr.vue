@@ -1,10 +1,21 @@
 <template>
   <div class="background">
-    <div v-if="loading" class="loading">
-      <q-spinner class="spinner" color="primary" size="3em" />
+    <div
+      v-if="loading"
+      class="loading"
+    >
+      <q-spinner
+        class="spinner"
+        color="primary"
+        size="3em"
+      />
     </div>
     <div>
-      <qrcode-stream @decode="onDecode" @init="onInit" class="qr-scanner">
+      <qrcode-stream
+        @decode="onDecode"
+        @init="onInit"
+        class="qr-scanner"
+      >
       </qrcode-stream>
     </div>
   </div>
@@ -30,30 +41,35 @@ export default {
   },
   methods: {
     async onDecode(lockerId) {
-      lockerId = "S2"; //mock
-      if (this.mode === MODE.RENTAL) {
-        const lockerState = await getLockerState({ lockerId });
-        if (lockerState.data().status === "occupied") {
-          Dialog.create({
-            title: "Warning",
-            message: "Locker not available",
-          });
-          return this.$router.push({
-            path: `/`,
+      try {
+        if (this.mode === MODE.RENTAL) {
+          const lockerState = await getLockerState({ lockerId });
+          if (lockerState.data().status === "occupied") {
+            Dialog.create({
+              title: "Warning",
+              message: "Locker not available",
+            });
+            return this.$router.push({
+              path: `/`,
+            });
+          }
+          this.$router.push({
+            path: `/detail?mode=${this.mode}&lockerId=${lockerId}`,
           });
         }
-        this.$router.push({
-          path: `/detail?mode=${this.mode}&lockerId=${lockerId}`,
-        });
-      }
-      if (this.mode === MODE.SELF_UNLOCK) {
-        this.$router.push({
-          path: `/input-passcode?mode=${this.mode}&lockerId=${lockerId}`,
-        });
-      }
-      if (this.mode === MODE.OTP_UNLOCK) {
-        this.$router.push({
-          path: `/input-passcode?mode=${this.mode}&lockerId=${lockerId}`,
+        if (this.mode === MODE.SELF_UNLOCK) {
+          this.$router.push({
+            path: `/input-passcode?mode=${this.mode}&lockerId=${lockerId}`,
+          });
+        }
+        if (this.mode === MODE.OTP_UNLOCK) {
+          this.$router.push({
+            path: `/input-passcode?mode=${this.mode}&lockerId=${lockerId}`,
+          });
+        }
+      } catch (error) {
+        return this.$router.push({
+          path: `/`,
         });
       }
     },
@@ -86,10 +102,10 @@ export default {
     },
   },
   mounted() {
-    setTimeout(() => {
-      // this.loading = false;
-      this.onDecode("");
-    }, 3000);
+    // setTimeout(() => {
+    //   // this.loading = false;
+    //   this.onDecode("");
+    // }, 3000);
   },
   data() {
     return {

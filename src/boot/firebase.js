@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase"
+import { functions, initializeApp } from "firebase"
 
 export default async () => {
   initializeApp({
@@ -10,4 +10,6 @@ export default async () => {
     messagingSenderId: "61427660401",
     appId: "1:61427660401:web:6e0b8c80ae1d061f5b4dd0",
   })
+
+  // functions().useFunctionsEmulator(`http://localhost:5001`)
 }

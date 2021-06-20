@@ -1,6 +1,7 @@
 import { route } from 'quasar/wrappers'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import { authorizeGuard } from './guard'
 
 import routes from './routes'
 
@@ -27,10 +28,14 @@ export default function (/* { store, ssrContext } */) {
     base: process.env.VUE_ROUTER_BASE
   })
 
-  Router.beforeEach((to, from, next) => {
+  Router.beforeEach(async (to, from, next) => {
     let user = localStorage.getItem('auth__user')
-    if (to.name !== 'Login' && !user) next({ name: 'Login' })
-    else next()
+
+    return await authorizeGuard({
+      to,
+      user,
+      next
+    })
   })
 
   return Router
