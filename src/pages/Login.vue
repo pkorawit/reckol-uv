@@ -3,7 +3,10 @@
     <div class="absolute text">
       <p class="text-h4 product-name">uvbox</p>
     </div>
-    <div class="absolute input" v-if="mode === 'PHONE_INPUT'">
+    <div
+      class="absolute input"
+      v-if="mode === 'PHONE_INPUT'"
+    >
       <q-input
         dark
         type="number"
@@ -15,9 +18,22 @@
         label="กรอกเบอร์โทรศัพท์เพื่อรับ OTP"
         autofocus
       ></q-input>
-      <div class="q-pt-xl" id="recaptcha-container"></div>
+      <q-btn
+        color="secondary"
+        label="next"
+        class="full-width q-mt-md"
+        @click="renderRecaptcha"
+        :loading="loading"
+      />
+      <div
+        class="q-pt-xl"
+        id="recaptcha-container"
+      ></div>
     </div>
-    <div class="absolute input" v-if="mode === 'OTP_INPUT'">
+    <div
+      class="absolute input"
+      v-if="mode === 'OTP_INPUT'"
+    >
       <q-input
         dark
         type="number"
@@ -28,6 +44,13 @@
         label="กรอก OTP ที่ได้รับ"
         autofocus
       ></q-input>
+      <q-btn
+        color="secondary"
+        label="next"
+        class="full-width q-mt-md"
+        @click="confirmOTP"
+        :loading="loading"
+      />
     </div>
   </div>
 </template>
@@ -45,6 +68,7 @@ export default {
       recaptchaVerifier: null,
       mode: "PHONE_INPUT",
       confirmationResult: null,
+      loading: false
     };
   },
   methods: {
@@ -64,6 +88,7 @@ export default {
     },
     async confirmOTP() {
       try {
+        this.loading = true
         Loading.show();
         const result = await this.confirmationResult.confirm(this.otp);
 
@@ -83,23 +108,31 @@ export default {
         localStorage.setItem("auth__user", JSON.stringify(result.user));
         Loading.hide();
         this.$router.push("/");
+        this.loading = false
       } catch (error) {
         console.error(error);
         window.location.reload();
       }
     },
+    renderRecaptcha() {
+      this.loading = true
+      this.recaptchaVerifier.render();
+      setTimeout(() => {
+        this.loading = false
+      }, 3000);
+    }
   },
   watch: {
-    tel(val, newVal) {
-      if (val.length == 10) {
-        this.recaptchaVerifier.render();
-      }
-    },
-    otp(val, newVal) {
-      if (val.length == 6) {
-        this.confirmOTP();
-      }
-    },
+    // tel(val, newVal) {
+    //   if (val.length == 10) {
+    //     this.recaptchaVerifier.render();
+    //   }
+    // },
+    // otp(val, newVal) {
+    //   if (val.length == 6) {
+    //     this.confirmOTP();
+    //   }
+    // },
   },
   mounted() {
     this.recaptchaVerifier = new this.$auth.RecaptchaVerifier("recaptcha-container", {

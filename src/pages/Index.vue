@@ -5,14 +5,20 @@
         <p class="text-h6">My locker</p>
         <div>
           <div v-if="myLockers.length > 0">
-            <div v-for="locker in myLockers" :key="locker.id">
+            <div
+              v-for="locker in myLockers"
+              :key="locker.id"
+            >
               <locker-list-item
                 :locker="locker"
                 class="q-py-xs"
               ></locker-list-item>
             </div>
           </div>
-          <div v-else class="column justify-center items-center">
+          <div
+            v-else
+            class="column justify-center items-center"
+          >
             <p class="text-h4 text-none text-white">None</p>
           </div>
         </div>
@@ -21,9 +27,15 @@
 
     <div :class="shareLockerClass">
       <p class="text-h6">Share locker</p>
-      <q-scroll-area :delay="1500" class="scroll-area">
+      <q-scroll-area
+        :delay="1500"
+        class="scroll-area"
+      >
         <div v-if="shareLockers.length > 0">
-          <div v-for="locker in shareLockers" :key="locker.id">
+          <div
+            v-for="locker in shareLockers"
+            :key="locker.id"
+          >
             <locker-list-item
               :locker="locker"
               class="q-py-xs"
@@ -31,7 +43,10 @@
             ></locker-list-item>
           </div>
         </div>
-        <div v-else class="column justify-center items-center">
+        <div
+          v-else
+          class="column justify-center items-center"
+        >
           <p class="text-h4 text-none">None</p>
         </div>
       </q-scroll-area>
@@ -43,9 +58,9 @@
 import LockerListItem from "../components/LockerListItem.vue";
 import { QrcodeStream } from "vue-qrcode-reader";
 import PasswordForm from "../components/PasswordForm.vue";
-import { Notify } from "quasar";
 import { getUserLockersView } from "src/api";
 import { gsap } from "gsap";
+import { healthCheckState, startHealthCheckSubscription } from 'src/api/collections/health-check';
 
 export default {
   name: "IndexPage",
@@ -59,6 +74,7 @@ export default {
       opacity: 0,
       x: 500
     });
+
   },
   data() {
     return {
@@ -73,7 +89,10 @@ export default {
     },
     user() {
       return JSON.parse(localStorage.getItem("auth__user"));
-    }
+    },
+    isHealthy() {
+      return healthCheckState.isHealthy
+    },
   },
   async mounted() {
     const userLockers = await getUserLockersView({ userId: this.user.uid });

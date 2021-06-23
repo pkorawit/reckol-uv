@@ -1,4 +1,5 @@
-import { functions, initializeApp } from "firebase"
+import { initializeApp } from "firebase"
+
 
 export default async () => {
   initializeApp({

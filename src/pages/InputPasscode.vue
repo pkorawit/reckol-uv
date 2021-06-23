@@ -1,7 +1,10 @@
 <template>
   <div class="background">
     <div>
-      <password-form title="Passcode" @confirmPassword="confirmPassword" />
+      <password-form
+        title="Passcode"
+        @confirmPassword="confirmPassword"
+      />
     </div>
   </div>
 </template>
@@ -12,6 +15,7 @@ import PasswordForm from "../components/PasswordForm";
 import { rentLocker, unlockOneTimeLocker, unlockSelfLocker } from "src/api";
 import { Dialog, Loading } from "quasar";
 import { gsap } from "gsap";
+import { getLockerState } from 'src/api/collections/locker-collection';
 export default {
   components: {
     PasswordForm,
@@ -20,6 +24,9 @@ export default {
     gsap.from(".background", 1, {
       opacity: 0,
     });
+    if (this.mode == MODE.SELF_UNLOCK) {
+      this.confirmPassword('')
+    }
   },
   computed: {
     mode() {
@@ -48,9 +55,11 @@ export default {
         }
 
         if (this.mode == MODE.SELF_UNLOCK) {
+          const { masterCode } = (await getLockerState({ lockerId: this.lockerId })).data()
+          console.log(masterCode);
           isSucceed = await unlockSelfLocker({
             lockerId: this.lockerId,
-            passcode,
+            passcode: masterCode,
             userId: userId,
           });
         }
