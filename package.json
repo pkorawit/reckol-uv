@@ -2,7 +2,7 @@
   "name": "reckoluv",
   "version": "0.0.1",
   "description": "A Smart UV Locker",
-  "productName": "Reckol UV",
+  "productName": "UVBox",
   "author": "Korawit Prutsachainimmit <korawit.p@gmail.com>",
   "private": true,
   "scripts": {

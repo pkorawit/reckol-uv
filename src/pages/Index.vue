@@ -19,7 +19,16 @@
             v-else
             class="column justify-center items-center"
           >
-            <p class="text-h4 text-none">None</p>
+            <q-btn
+            outline
+            color="text-none"
+            icon="fas fa-qrcode"
+            class="btn q-mt-md"
+            size="1.5rem"
+            dense
+            label="Rent a UVbox"
+            to="/scanner?mode=RENTAL"
+          />
           </div>
         </div>
       </div>
@@ -185,6 +194,10 @@ export default {
       100vh - (80px + 65px) - (45px + 25px)
     ); // 100vh - (header height - footer height)px
   }
+}
+
+.text-red-custom{
+  color: #B52324;
 }
 
 .text-none {
