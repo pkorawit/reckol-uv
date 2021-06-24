@@ -2,7 +2,7 @@
   <div class="column parent">
     <div class="about">
       <div>
-        <p class="text-h6">My locker</p>
+        <p class="text-h6">My Box</p>
         <div>
           <div v-if="myLockers.length > 0">
             <div
@@ -19,14 +19,14 @@
             v-else
             class="column justify-center items-center"
           >
-            <p class="text-h4 text-none text-white">None</p>
+            <p class="text-h4 text-none">None</p>
           </div>
         </div>
       </div>
     </div>
 
     <div :class="shareLockerClass">
-      <p class="text-h6">Share locker</p>
+      <p class="text-h6">Shared Box</p>
       <q-scroll-area
         :delay="1500"
         class="scroll-area"
@@ -122,7 +122,7 @@ export default {
 
   border-radius: 50px 50px 0px 0px;
 
-  background: #1f2865;
+  background: #1D959E;
 
   color: white;
 
@@ -139,9 +139,9 @@ export default {
 
   border-radius: 50px 50px 0px 0px;
 
-  background: #eeecec;
+  background: #33C0CA;
 
-  color: black;
+  color: white;
 
   overflow-y: hidden;
 
@@ -168,7 +168,7 @@ export default {
 
   border-radius: 50px 50px 0px 0px;
 
-  background: #eeecec;
+  background: #33C0CA;
 
   color: black;
 
@@ -189,7 +189,7 @@ export default {
 
 .text-none {
   position: absolute;
-  color: #1f2865b9;
+  color: #F5F5F5;
   // top: 50%;
   transform: translate(0%, 380%);
 

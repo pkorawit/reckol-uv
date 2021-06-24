@@ -63,7 +63,7 @@ export default {
 .ss {
   position: fixed;
 
-  color: #455484;
+  color: #B52324;
   top: 96%;
   left: calc(50vw - 23px);
 
@@ -75,12 +75,12 @@ export default {
   bottom: 0px;
 }
 .scan-btn {
-  background: #1f2865;
+  background: #167A82;
 }
 
 .footer {
   min-height: 65px;
   max-height: 65px;
-  background: #1f2865;
+  background: #167A82;
 }
 </style>

@@ -22,6 +22,7 @@ export default {
 }
 .layout {
   overflow-y: hidden;
+  background-color: #F5F5F5;
 }
 
 .header {

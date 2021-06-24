@@ -1,17 +1,15 @@
 <template>
   <div class="column justify-center items-center page">
-    <div class="absolute text">
-      <p class="text-h4 product-name">uvbox</p>
-    </div>
     <div
       class="absolute input"
       v-if="mode === 'PHONE_INPUT'"
     >
+    <div class="text-center"><img alt="logo" src="~assets/coc_logo.png" width="40%" /></div>    
+    <div class="text-center q-mt-md"><img alt="logo" src="~assets/uvbox.png" width="70%" /></div>          
       <q-input
-        dark
-        type="number"
-        mask="###-###-####"
-        hint="ex. 098-xxx-xxxx"
+        type="text"
+        mask="(###) ### - ####"
+        hint="ex. (098)-xxx-xxxx"
         v-model="tel"
         input-style="text-align:center;"
         color="secondary"
@@ -33,9 +31,10 @@
     <div
       class="absolute input"
       v-if="mode === 'OTP_INPUT'"
-    >
+    > 
+    <div class="text-center"><img alt="logo" src="~assets/coc_logo.png" width="40%" /></div>    
+    <div class="text-center q-mt-md"><img alt="logo" src="~assets/uvbox.png" width="70%" /></div>    
       <q-input
-        dark
         type="number"
         hint="ex. xxxxxx"
         v-model="otp"
@@ -46,7 +45,7 @@
       ></q-input>
       <q-btn
         color="secondary"
-        label="next"
+        label="Sign In"
         class="full-width q-mt-md"
         @click="confirmOTP"
         :loading="loading"
@@ -74,10 +73,10 @@ export default {
   methods: {
     async onLogin(response) {
       try {
-        const formatTel = (tel) => `+66${tel.slice(1, 10)}`;
+        const formatTel = `+66${this.tel.replace("(","").replace(")","").replace("-","").replaceAll(" ","").slice(1,10)}`;    
         Loading.show();
         this.confirmationResult = await this.$auth().signInWithPhoneNumber(
-          formatTel(this.tel),
+          formatTel,
           this.recaptchaVerifier
         );
         this.mode = "OTP_INPUT";
@@ -165,11 +164,11 @@ export default {
 
 .product-name {
   text-transform: uppercase;
-  color: white;
+  color: #1D959E;
 }
 
 .page {
   height: 100vh;
-  background-color: #1f2865;
+  background-color: #F5F5F5;
 }
 </style>
