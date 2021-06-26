@@ -16,18 +16,26 @@
       </p>
       <p>• ไม่รับผิดชอบต่อสัมภาระที่สูญหาย หรือสิ่งของมีค่าใดๆ ที่นำมาฝาก</p>
     </div>
-    <div v-if="mode === MODE.SELF_UNLOCK" class="information q-pa-md q-mb-md q-ma-md">
+    <div
+      v-if="mode === MODE.SELF_UNLOCK"
+      class="information q-pa-md q-mb-md q-ma-md"
+    >
       <div class="row text-h6">
-        <div class="col"><q-badge size="lg" align="middle" color="negative">
-       Passcode
-      </q-badge>
-     {{ locker.masterCode }}</div>
+        <div class="col">
+          <q-badge size="lg" align="middle" color="negative">
+            Passcode
+          </q-badge>
+          {{ locker.masterCode }}
+        </div>
       </div>
       <div class="row text-h6">
-        <div class="col"><q-badge size="lg" align="middle" color="negative">
-       Rent Time
-      </q-badge>
-      {{ new Date().toLocaleDateString() }} : {{ new Date().toLocaleTimeString() }}      </div>
+        <div class="col">
+          <q-badge size="lg" align="middle" color="negative">
+            Rent Time
+          </q-badge>
+          {{ new Date().toLocaleDateString() }} :
+          {{ new Date().toLocaleTimeString() }}
+        </div>
       </div>
       <p v-if="locker.sharing.isSharing">
         แชร์ไปยัง: {{ locker.sharing.targetPhoneNumber }}
@@ -41,62 +49,58 @@
       <p>รหัสผ่าน: {{ locker.onetimeCode }}</p>
     </div>
     <div class="action">
-      <div
-        v-if="mode === MODE.SELF_UNLOCK"
-        class="my-locker"
-      >
-      <div class="row q-ma-md">
-        <div class="col">
-          <q-btn
-          unelevated
-          icon="wb_iridescent"
-          :disable="isDisable"
-          :color="sterilizeBtnColor"
-          label="sterilize"
-          @click="sterilize"
-          :class="sterilizeBtnClass"
-        />
+      <div v-if="mode === MODE.SELF_UNLOCK" class="my-locker">
+        <div class="row q-ma-md">
+          <div class="col">
+            <q-btn
+              unelevated
+              icon="wb_iridescent"
+              :disable="isDisable"
+              :color="sterilizeBtnColor"
+              label="sterilize"
+              @click="sterilize"
+              :class="sterilizeBtnClass"
+            />
+          </div>
         </div>
-      </div>
-      <div class="row q-ma-md">
-        <div class="col">
-           <q-btn
-           unelevated
-          icon="lock_open"
-          :disable="isDisable"
-          :color="actionBtnColor"
-          label="unlock"
-          :to="`/scanner?mode=${MODE.SELF_UNLOCK}&lockerId=${lockerId}`"
-          :class="`${actionBtnClass}`"
-        />
+        <div class="row q-ma-md">
+          <div class="col">
+            <q-btn
+              unelevated
+              icon="lock_open"
+              :disable="isDisable"
+              :color="actionBtnColor"
+              label="unlock"
+              :to="`/scanner?mode=${MODE.SELF_UNLOCK}&lockerId=${lockerId}`"
+              :class="`${actionBtnClass}`"
+            />
+          </div>
         </div>
-      </div>
-      <div class="row q-ma-md">
-        <div class="col">
-          <q-btn
-          v-if="!isSharing"
-          icon="ios_share"
-          :disable="isDisable"
-          :color="actionBtnColor"
-          label="share"
-          unelevated
-          @click="openSendOneTimeCodeDialog"
-          :class="`${actionBtnClass}`"
-        />
-        <q-btn
-          v-if="isSharing"
-          :disable="isDisable"
-          icon="cancel_presentation"
-          color="negative"
-          label="cancel share"
-          unelevated
-          @click="cancelShareLocker"
-          style="font-size: 20px"
-          :class="`${actionBtnClass}`"
-        />
+        <div class="row q-ma-md">
+          <div class="col">
+            <q-btn
+              v-if="!isSharing"
+              icon="ios_share"
+              :disable="isDisable"
+              :color="actionBtnColor"
+              label="share"
+              unelevated
+              @click="openSendOneTimeCodeDialog"
+              :class="`${actionBtnClass}`"
+            />
+            <q-btn
+              v-if="isSharing"
+              :disable="isDisable"
+              icon="cancel_presentation"
+              color="negative"
+              label="cancel share"
+              unelevated
+              @click="cancelShareLocker"
+              style="font-size: 20px"
+              :class="`${actionBtnClass}`"
+            />
+          </div>
         </div>
-      </div>
- 
       </div>
       <div
         v-if="mode === MODE.OTP_UNLOCK"
@@ -164,8 +168,8 @@ export default {
     openSendOneTimeCodeDialog() {
       this.$q
         .dialog({
-          title: "Prompt",
-          message: "Input target phone number.",
+          title: `Share [${ this.lockerId }]  to...`,
+          message: "Input the phone number",
           prompt: {
             model: "",
             type: "text", // optional
@@ -245,10 +249,11 @@ export default {
       return JSON.parse(localStorage.getItem("auth__user"));
     },
     isSterilizing() {
+      return false;
       return this.sterilizing;
     },
     isActionable() {
-
+      return true;
       if (this.isSterilizing) {
         return false;
       }
@@ -260,6 +265,7 @@ export default {
       return true;
     },
     isDisable() {
+      return false;
       if (this.isSterilizing) {
         return true;
       }
@@ -271,7 +277,9 @@ export default {
       return false;
     },
     actionBtnClass() {
-      return !this.isActionable ? `my-locker-btn disable-btn full-width` : `my-locker-btn full-width`;
+      return !this.isActionable
+        ? `my-locker-btn disable-btn full-width`
+        : `my-locker-btn full-width`;
     },
     sterilizeBtnClass() {
       return !this.isActionable
