@@ -1,19 +1,9 @@
 <template>
   <div>
-    <q-card flat bordered class="locker">
-      <p style="margin: 5px 0 0 10px">UVBOX</p>
-      <div class="row text-left">
-        <div class="col-8">
-          <div class="small-title">Locker {{ locker.id }}</div>
-        </div>
-        <div class="col-4">
-          <div>
-            <q-btn text-color="primary" outline @click="detail">detail</q-btn>
-          </div>
-        </div>
-        <div class="col-12 text-left">
-          <p style="margin: 0 0 0 10px">Owner : {{ locker.ownner }}</p>
-        </div>
+    <q-card flat bordered class="locker" @click="detail">
+      <div class="row">
+        <div class="col q-ma-md text-h5"><q-icon color="negative" name="fas fa-cube" size="lg" /> {{ locker.id }}</div>
+        <div class="col q-ma-md text-right"><q-btn unelevated rounded class="bg-grey-3" text-color="negative" @click="detail">View Detail</q-btn></div>
       </div>
     </q-card>
   </div>

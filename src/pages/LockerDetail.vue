@@ -1,96 +1,102 @@
 <template>
   <div class="detail">
-    <div class="name text-h4 q-mb-xl">{{ lockerId }}</div>
-    <div
-      v-if="mode === MODE.RENTAL"
-      class="information q-pa-md q-mb-xl"
-    >
+    <div class="name text-h4 q-mb-md">
+      <q-icon color="negative" name="fas fa-cube" size="xl" />
+      {{ lockerId }}
+    </div>
+    <div v-if="mode === MODE.RENTAL" class="information q-pa-md q-ma-md">
+      <p>• ฝากสัมภาระได้สูงสุด 1 วัน</p>
+      <p>• สัมภาระที่มีอายุการใช้บริการ ฝากไว้เกินกว่า 1 วัน</p>
       <p>
-        • ฝากสัมภาระได้สูงสุด 1 วัน
-      </p>
-      <p>
-        • สัมภาระที่มีอายุการใช้บริการ ฝากไว้เกินกว่า 1 วัน
-      </p>
-      <p>
-        • สัมภาระต้องสงสัยจะถูกตรวจสอบโดยไม่ต้องแจ้งให้ทางผู้ใช้บริการทราบล่วงหน้า
+        •
+        สัมภาระต้องสงสัยจะถูกตรวจสอบโดยไม่ต้องแจ้งให้ทางผู้ใช้บริการทราบล่วงหน้า
       </p>
       <p>
         • ไม่อนุญาติให้ฝากหรือจัดเก็บ สัมภาระอันตราย หรือของผิดกฎหมายทุกชนิด
       </p>
-      <p>
-        • ไม่รับผิดชอบต่อสัมภาระที่สูญหาย หรือสิ่งของมีค่าใดๆ ที่นำมาฝาก
-      </p>
+      <p>• ไม่รับผิดชอบต่อสัมภาระที่สูญหาย หรือสิ่งของมีค่าใดๆ ที่นำมาฝาก</p>
     </div>
-    <div
-      v-if="mode === MODE.SELF_UNLOCK"
-      class="information q-pa-md q-mb-xl"
-    >
-      <p>
-        รหัสผ่าน: {{locker.masterCode}}
-      </p>
-      <p>
-        จองเมื่อวันที่: {{new Date().toLocaleDateString()}} {{new Date().toLocaleTimeString()}}
-      </p>
-      <p v-if="!locker.sharing.isSharing">
+    <div v-if="mode === MODE.SELF_UNLOCK" class="information q-pa-md q-mb-md q-ma-md">
+      <div class="row text-h6">
+        <div class="col"><q-badge size="lg" align="middle" color="negative">
+       Passcode
+      </q-badge>
+     {{ locker.masterCode }}</div>
+      </div>
+      <div class="row text-h6">
+        <div class="col"><q-badge size="lg" align="middle" color="negative">
+       Rent Time
+      </q-badge>
+      {{ new Date().toLocaleDateString() }} : {{ new Date().toLocaleTimeString() }}      </div>
+      </div>
+      <p v-if="locker.sharing.isSharing">
+        แชร์ไปยัง: {{ locker.sharing.targetPhoneNumber }}
       </p>
       <p v-if="locker.sharing.isSharing">
-        แชร์ไปยัง: {{locker.sharing.targetPhoneNumber}}
-      </p>
-      <p v-if="locker.sharing.isSharing">
-        รหัสการแชร์: {{locker.onetimeCode}}
+        รหัสการแชร์: {{ locker.onetimeCode }}
       </p>
     </div>
-    <div
-      v-if="mode === MODE.OTP_UNLOCK"
-      class="information q-pa-md q-mb-xl"
-    >
-      <p>
-        ผู้แชร์: {{locker.ownner}}
-      </p>
-      <p>
-        รหัสผ่าน: {{locker.onetimeCode}}
-      </p>
+    <div v-if="mode === MODE.OTP_UNLOCK" class="information q-pa-md q-mb-xl">
+      <p>ผู้แชร์: {{ locker.ownner }}</p>
+      <p>รหัสผ่าน: {{ locker.onetimeCode }}</p>
     </div>
     <div class="action">
       <div
         v-if="mode === MODE.SELF_UNLOCK"
-        class="my-locker flex justify-around"
+        class="my-locker"
       >
-        <q-btn
+      <div class="row q-ma-md">
+        <div class="col">
+          <q-btn
+          unelevated
+          icon="wb_iridescent"
+          :disable="isDisable"
+          :color="sterilizeBtnColor"
+          label="sterilize"
+          @click="sterilize"
+          :class="sterilizeBtnClass"
+        />
+        </div>
+      </div>
+      <div class="row q-ma-md">
+        <div class="col">
+           <q-btn
+           unelevated
+          icon="lock_open"
           :disable="isDisable"
           :color="actionBtnColor"
           label="unlock"
-          outline
           :to="`/scanner?mode=${MODE.SELF_UNLOCK}&lockerId=${lockerId}`"
-          :class="`${actionBtnClass} q-mr-md`"
+          :class="`${actionBtnClass}`"
         />
-        <q-btn
+        </div>
+      </div>
+      <div class="row q-ma-md">
+        <div class="col">
+          <q-btn
           v-if="!isSharing"
+          icon="ios_share"
           :disable="isDisable"
           :color="actionBtnColor"
           label="share"
-          outline
+          unelevated
           @click="openSendOneTimeCodeDialog"
-          :class="`${actionBtnClass} q-ml-md`"
+          :class="`${actionBtnClass}`"
         />
         <q-btn
           v-if="isSharing"
           :disable="isDisable"
+          icon="cancel_presentation"
           color="negative"
           label="cancel share"
-          outline
+          unelevated
           @click="cancelShareLocker"
           style="font-size: 20px"
-          :class="`${actionBtnClass} q-ml-md`"
+          :class="`${actionBtnClass}`"
         />
-        <q-btn
-          :disable="isDisable"
-          :color="sterilizeBtnColor"
-          label="sterilize"
-          outline
-          @click="sterilize"
-          :class="sterilizeBtnClass"
-        />
+        </div>
+      </div>
+ 
       </div>
       <div
         v-if="mode === MODE.OTP_UNLOCK"
@@ -105,10 +111,7 @@
           :class="`${actionBtnClass}`"
         />
       </div>
-      <div
-        v-if="mode === MODE.RENTAL"
-        class="my-locker flex justify-around"
-      >
+      <div v-if="mode === MODE.RENTAL" class="my-locker flex justify-around">
         <q-btn
           :disable="isDisable"
           :color="actionBtnColor"
@@ -127,9 +130,13 @@ import { sendOneTimeCode, cancelShareLocker } from "src/api";
 import { getLockerState } from "src/api/collections/locker-collection";
 import { MODE } from "src/common/constant";
 import { gsap } from "gsap";
-import { sentSterilizeLockerCommand } from 'src/api/collections/command-collection';
-import { getSterilizeStatus } from 'src/api/collections/sterilize-collection';
-import { healthCheckState, startHealthCheckSubscription, onHealthChanges } from "src/api/collections/health-check";
+import { sentSterilizeLockerCommand } from "src/api/collections/command-collection";
+import { getSterilizeStatus } from "src/api/collections/sterilize-collection";
+import {
+  healthCheckState,
+  startHealthCheckSubscription,
+  onHealthChanges,
+} from "src/api/collections/health-check";
 
 export default {
   data() {
@@ -137,18 +144,18 @@ export default {
       locker: null,
       sterilizing: false,
       setting: null,
-      isHealthy: false
+      isHealthy: false,
     };
   },
   methods: {
     async fetchLocker() {
       const locker = await getLockerState({
-        lockerId: this.lockerId
+        lockerId: this.lockerId,
       });
       const sterilizeStatus = await getSterilizeStatus({
-        lockerId: this.lockerId
-      })
-      this.sterilizing = sterilizeStatus.data().sterilizeStatus
+        lockerId: this.lockerId,
+      });
+      this.sterilizing = sterilizeStatus.data().sterilizeStatus;
       this.locker = {
         ...locker.data(),
         id: this.lockerId,
@@ -161,64 +168,68 @@ export default {
           message: "Input target phone number.",
           prompt: {
             model: "",
-            type: "text" // optional
+            type: "text", // optional
           },
           cancel: true,
-          persistent: true
+          persistent: true,
         })
-        .onOk(target => this.onOk(target))
-        .onCancel(() => { })
-        .onDismiss(() => { });
+        .onOk((target) => this.onOk(target))
+        .onCancel(() => {})
+        .onDismiss(() => {});
     },
     async onOk(targetPhoneNumber) {
       const randomCode = () => Math.floor(100000 + Math.random() * 900000);
       const [error] = await sendOneTimeCode({
         lockerId: this.lockerId,
         onetimeCode: randomCode().toString(),
-        targetPhoneNumber
+        targetPhoneNumber,
       });
       if (error) {
         return this.$q.dialog({
           title: "Error",
-          message: "Can't share locker please contact operator."
+          message: "Can't share locker please contact operator.",
         });
       }
-      await this.fetchLocker()
+      await this.fetchLocker();
       this.onSent();
     },
     onSent() {
       this.$q.dialog({
         title: "Success",
-        message: "Share locker success."
+        message: "Share locker success.",
       });
     },
     async sterilize() {
-      const isConfirmed = confirm(`Sterilizesss?`)
+      const isConfirmed = confirm(`Sterilizesss?`);
       if (!isConfirmed) {
-        return
+        return;
       }
       const userId = this.user.phoneNumber.replace("+66", "0");
       await sentSterilizeLockerCommand({
         lockerId: this.lockerId,
-        userId
-      })
+        userId,
+      });
       return this.$router.push({
         path: `/`,
       });
     },
     async cancelShareLocker() {
-      const isConfirmed = confirm(`Cancel share locker ${this.lockerId}`)
+      const isConfirmed = confirm(`Cancel share locker ${this.lockerId}`);
       if (!isConfirmed) {
-        return
+        return;
       }
-      await cancelShareLocker({ locker: this.locker })
-      this.$q.dialog({
-        title: "Success",
-        message: "Share locker success."
-      }).onDismiss(() => this.$router.push({
-        path: `/`,
-      }))
-    }
+      await cancelShareLocker({ locker: this.locker });
+      this.$q
+        .dialog({
+          title: "Success",
+          message: "Share locker success.",
+        })
+        .onDismiss(() =>
+          this.$router.push({
+            path: `/`,
+          })
+        );
+    },
   },
   computed: {
     mode() {
@@ -234,58 +245,61 @@ export default {
       return JSON.parse(localStorage.getItem("auth__user"));
     },
     isSterilizing() {
-      return this.sterilizing
+      return this.sterilizing;
     },
     isActionable() {
+
       if (this.isSterilizing) {
-        return false
+        return false;
       }
 
       if (!this.isHealthy) {
-        return false
+        return false;
       }
 
-      return true
+      return true;
     },
     isDisable() {
       if (this.isSterilizing) {
-        return true
+        return true;
       }
 
       if (!this.isHealthy) {
-        return true
+        return true;
       }
 
-      return false
+      return false;
     },
     actionBtnClass() {
-      return !this.isActionable ? `my-locker-btn disable-btn` : `my-locker-btn`
+      return !this.isActionable ? `my-locker-btn disable-btn full-width` : `my-locker-btn full-width`;
     },
     sterilizeBtnClass() {
-      return !this.isActionable ? `my-locker-sterilize-btn disable-btn q-mt-lg` : `my-locker-sterilize-btn q-mt-lg`
+      return !this.isActionable
+        ? `my-locker-sterilize-btn disable-btn`
+        : `my-locker-sterilize-btn`;
     },
     actionBtnColor() {
-      return !this.isActionable ? `grey` : `primary`
+      return !this.isActionable ? `grey` : `primary`;
     },
     sterilizeBtnColor() {
-      return !this.isActionable ? `grey` : `primary`
+      return !this.isActionable ? `grey` : `deep-purple-9`;
     },
     isSharing() {
-      return this.locker?.sharing?.isSharing
-    }
+      return this.locker?.sharing?.isSharing;
+    },
   },
   async mounted() {
     try {
       gsap.from(".detail", 1, {
-        opacity: 0
+        opacity: 0,
       });
-      onHealthChanges((isHealthy) => this.isHealthy = isHealthy)
-      await startHealthCheckSubscription()
-      await this.fetchLocker()
+      onHealthChanges((isHealthy) => (this.isHealthy = isHealthy));
+      await startHealthCheckSubscription();
+      await this.fetchLocker();
     } catch (error) {
       console.error(error);
     }
-  }
+  },
 };
 </script>
 
@@ -300,29 +314,29 @@ export default {
 
   overflow-y: hidden;
 
-  border-radius: 50px 50px 0px 0px;
+  // border-radius: 15px 15px 0px 0px;
 
   background: #f5f5f5;
 
   color: white;
 
-  padding: 25px;
+  padding: 5px;
   opacity: 1;
 
   .name {
-    color: white;
+    color: $primary;
     height: 50px;
     width: 100%;
     text-align: center;
-    background: $primary;
-    border-radius: 40px;
+    background: $accent;
+    border-radius: 30px;
   }
 
   .information {
-    color: white;
+    color: $primary;
     font-size: 15px;
-    background: $primary;
-    border-radius: 25px;
+    background: $accent;
+    border-radius: 30px;
   }
 
   .action {

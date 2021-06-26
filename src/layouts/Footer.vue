@@ -5,7 +5,7 @@
         <div class="absolute ss">
           <q-btn
             flat
-            icon="fas fa-qrcode"
+            icon="qr_code_scanner"
             class="absolute btn"
             size="1.5rem"
             dense
