@@ -2,7 +2,7 @@
   <div class="background">
     <div>
       <password-form
-        title="Passcode"
+        title="Set the passcode"
         @confirmPassword="confirmPassword"
       />
     </div>

@@ -1,15 +1,24 @@
 <template>
   <div>
-    <div class="small-title text-h6">{{ title }}</div>
-    <q-card class="q-pt-xl text-center card">
+    <div class="text-h5 text-primary">{{ title }}</div>
+    <q-card class="text-center card no-shadow" style="margin-top:24px">
       <q-card-section class="row justify-center">
         <div class=" ">
           <div>
-            <q-input type="number" input-style="text-align:center; font-size:20px" v-model="input1"></q-input>
+            <q-input 
+            type="text"
+            mask="#  #  #  #  #  #"
+            hint="ex : 123456"
+            input-style="text-align:center; font-size:35px; color: #B52324" v-model="input1"></q-input>
           </div>
 
           <div class="q-ma-lg">
-            <q-btn color="primary" class="full-width q-px-lg q-mt-sm q-py-sm" @click="confirmPassword" outline>Confirm</q-btn>
+            <q-btn color="primary" 
+            unelevated
+            icon="fas fa-check"
+            class="full-width my-locker-btn " 
+            label="Confirm"
+            @click="confirmPassword"></q-btn>
           </div>
         </div>
       </q-card-section>
@@ -73,4 +82,11 @@ export default {
   margin-top: 40px;
   border-radius: 14px;
 }
+
+.my-locker-btn {
+        width: 45%;
+        height: 75px;
+        font-size: 20px;
+        border-radius: 25px;
+      }
 </style>

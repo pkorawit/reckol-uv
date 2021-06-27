@@ -4,17 +4,13 @@
       <q-icon color="negative" name="fas fa-cube" size="xl" />
       {{ lockerId }}
     </div>
-    <div v-if="mode === MODE.RENTAL" class="information q-pa-md q-ma-md">
-      <p>• ฝากสัมภาระได้สูงสุด 1 วัน</p>
-      <p>• สัมภาระที่มีอายุการใช้บริการ ฝากไว้เกินกว่า 1 วัน</p>
-      <p>
-        •
-        สัมภาระต้องสงสัยจะถูกตรวจสอบโดยไม่ต้องแจ้งให้ทางผู้ใช้บริการทราบล่วงหน้า
-      </p>
-      <p>
-        • ไม่อนุญาติให้ฝากหรือจัดเก็บ สัมภาระอันตราย หรือของผิดกฎหมายทุกชนิด
-      </p>
-      <p>• ไม่รับผิดชอบต่อสัมภาระที่สูญหาย หรือสิ่งของมีค่าใดๆ ที่นำมาฝาก</p>
+    <div v-if="mode === MODE.RENTAL" class="information q-pa-md q-ma-md bg-white text-h6">
+      <ul>
+        <li>ฝากสัมภาระได้สูงสุด 1 วัน</li>
+        <li>สัมภาระต้องสงสัยจะถูกตรวจสอบโดยไม่ต้องแจ้งให้ทางผู้ใช้บริการทราบล่วงหน้า</li>
+        <li>ไม่อนุญาติให้ฝากหรือจัดเก็บ สัมภาระอันตราย หรือของผิดกฎหมายทุกชนิด</li>
+        <li>ไม่รับผิดชอบต่อสัมภาระที่สูญหาย หรือสิ่งของมีค่าใดๆ ที่นำมาฝาก</li>
+      </ul>
     </div>
     <div
       v-if="mode === MODE.SELF_UNLOCK"
@@ -115,12 +111,13 @@
           :class="`${actionBtnClass}`"
         />
       </div>
-      <div v-if="mode === MODE.RENTAL" class="my-locker flex justify-around">
+      <div v-if="mode === MODE.RENTAL" class="my-locker flex justify-around q-ma-md">
         <q-btn
           :disable="isDisable"
           :color="actionBtnColor"
           label="Rent"
-          outline
+          icon="fas fa-check"
+          unelevated
           :to="`/input-passcode?mode=${MODE.RENTAL}&lockerId=${lockerId}`"
           :class="`${actionBtnClass}`"
         />
