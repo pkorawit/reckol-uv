@@ -6,14 +6,16 @@
         <div class=" ">
           <div>
             <q-input 
+            ref="passcode"
             type="text"
             mask="#  #  #  #  #  #"
             hint="ex : 123456"
             input-style="text-align:center; font-size:35px; color: #B52324" v-model="input1"></q-input>
           </div>
 
-          <div class="q-ma-lg">
+          <div class="q-ma-md">
             <q-btn color="primary" 
+            :disable="isNoneValidPasscode"
             unelevated
             icon="fas fa-check"
             class="full-width my-locker-btn " 
@@ -43,6 +45,9 @@ export default {
       // input4: ""
     };
   },
+  mounted(){
+    this.$refs.passcode.focus()
+  },
   methods: {
     confirm() {
       this.$emit("confirm", this.password);
@@ -54,7 +59,7 @@ export default {
       // console.log(this.input1);
 
       // api state
-      this.input1 == "" ? "" : this.$emit("confirmPassword", this.input1);
+      this.input1 == "" ? "" : this.$emit("confirmPassword", this.password);
     },
     toInput(input) {
       const temp = [this.input1, this.input2, this.input3, this.input4];
@@ -65,7 +70,12 @@ export default {
   computed: {
     password: {
       get() {
-        return this.input1 + this.input2 + this.input3 + this.input4;
+        return this.input1.replaceAll(" ","");
+      },
+    },
+    isNoneValidPasscode: {
+      get() {
+        return (this.password.length == 6) ? false: true;
       },
     },
   },
@@ -85,7 +95,7 @@ export default {
 
 .my-locker-btn {
         width: 45%;
-        height: 75px;
+        height: 65px;
         font-size: 20px;
         border-radius: 25px;
       }

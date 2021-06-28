@@ -5,30 +5,24 @@
         <p class="text-h6">My Box</p>
         <div>
           <div v-if="myLockers.length > 0">
-            <div
-              v-for="locker in myLockers"
-              :key="locker.id"
-            >
+            <div v-for="locker in myLockers" :key="locker.id">
               <locker-list-item
                 :locker="locker"
                 class="q-py-xs"
               ></locker-list-item>
-            </div>
+            </div>            
           </div>
-          <div
-            v-else
-            class="column justify-center items-center"
-          >
+          <div v-else class="column justify-center items-center">
             <q-btn
-            outline
-            color="text-none"
-            icon="fas fa-qrcode"
-            class="btn q-mt-md"
-            size="1.5rem"
-            dense
-            label="Rent a UVbox"
-            to="/scanner?mode=RENTAL"
-          />
+              outline
+              color="text-none"
+              icon="fas fa-qrcode"
+              class="btn q-mt-md"
+              size="1.0rem"
+              dense
+              label="Rent a UVbox"
+              to="/scanner?mode=RENTAL"
+            />
           </div>
         </div>
       </div>
@@ -36,15 +30,9 @@
 
     <div :class="shareLockerClass">
       <p class="text-h6">Shared Box</p>
-      <q-scroll-area
-        :delay="1500"
-        class="scroll-area"
-      >
+      <q-scroll-area :delay="1500" class="scroll-area">
         <div v-if="shareLockers.length > 0">
-          <div
-            v-for="locker in shareLockers"
-            :key="locker.id"
-          >
+          <div v-for="locker in shareLockers" :key="locker.id">
             <locker-list-item
               :locker="locker"
               class="q-py-xs"
@@ -52,14 +40,11 @@
             ></locker-list-item>
           </div>
         </div>
-        <div
-          v-else
-          class="column justify-center items-center"
-        >
+        <div v-else class="column justify-center items-center">
           <p class="text-h4 text-none">None</p>
         </div>
       </q-scroll-area>
-    </div>
+    </div>   
   </div>
 </template>
 
@@ -69,26 +54,29 @@ import { QrcodeStream } from "vue-qrcode-reader";
 import PasswordForm from "../components/PasswordForm.vue";
 import { getUserLockersView } from "src/api";
 import { gsap } from "gsap";
-import { healthCheckState, startHealthCheckSubscription } from 'src/api/collections/health-check';
+import {
+  healthCheckState,
+  startHealthCheckSubscription,
+} from "src/api/collections/health-check";
 
 export default {
   name: "IndexPage",
   components: {
     QrcodeStream,
     LockerListItem,
-    PasswordForm
+    PasswordForm,
   },
   mounted() {
     gsap.to(".parent", 1, {
       opacity: 0,
-      x: 500
+      x: 500,
     });
-
   },
   data() {
     return {
       myLockers: [],
-      shareLockers: []
+      shareLockers: [],
+      
     };
   },
   computed: {
@@ -100,14 +88,14 @@ export default {
       return JSON.parse(localStorage.getItem("auth__user"));
     },
     isHealthy() {
-      return healthCheckState.isHealthy
+      return healthCheckState.isHealthy;
     },
   },
   async mounted() {
     const userLockers = await getUserLockersView({ userId: this.user.uid });
     this.myLockers = userLockers.myLockers;
     this.shareLockers = userLockers.shareLockers;
-  }
+  },
 };
 </script>
 
@@ -131,7 +119,7 @@ export default {
 
   border-radius: 50px 50px 0px 0px;
 
-  background: #1D959E;
+  background: #1d959e;
 
   color: white;
 
@@ -148,7 +136,7 @@ export default {
 
   border-radius: 50px 50px 0px 0px;
 
-  background: #33C0CA;
+  background: #33c0ca;
 
   color: white;
 
@@ -177,7 +165,7 @@ export default {
 
   border-radius: 50px 50px 0px 0px;
 
-  background: #33C0CA;
+  background: #33c0ca;
 
   color: black;
 
@@ -196,13 +184,13 @@ export default {
   }
 }
 
-.text-red-custom{
-  color: #B52324;
+.text-red-custom {
+  color: #b52324;
 }
 
 .text-none {
   position: absolute;
-  color: #F5F5F5;
+  color: #f5f5f5;
   // top: 50%;
   transform: translate(0%, 380%);
 

@@ -53,8 +53,8 @@
               icon="wb_iridescent"
               :disable="isDisable"
               :color="sterilizeBtnColor"
-              label="sterilize"
-              @click="sterilize"
+              label="uv sterilize"
+              @click="confirmSterilize"
               :class="sterilizeBtnClass"
             />
           </div>
@@ -116,13 +116,27 @@
           :disable="isDisable"
           :color="actionBtnColor"
           label="Rent"
-          icon="fas fa-check"
+          icon="fact_check"
+          
           unelevated
           :to="`/input-passcode?mode=${MODE.RENTAL}&lockerId=${lockerId}`"
           :class="`${actionBtnClass}`"
         />
       </div>
     </div>
+     <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="wb_iridescent" color="deep-purple-9" text-color="white" />
+          <span class="q-ml-sm">The sterilization will take about 10 minutes.</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Cancel" color="primary" v-close-popup />
+          <q-btn flat label="Start" color="primary" @click="sterilize" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -146,6 +160,7 @@ export default {
       sterilizing: false,
       setting: null,
       isHealthy: false,
+      confirm: false
     };
   },
   methods: {
@@ -200,11 +215,11 @@ export default {
         message: "Share locker success.",
       });
     },
+    confirmSterilize(){
+      this.confirm = true;
+    },
     async sterilize() {
-      const isConfirmed = confirm(`Sterilizesss?`);
-      if (!isConfirmed) {
-        return;
-      }
+      console.log("Start sterilize");
       const userId = this.user.phoneNumber.replace("+66", "0");
       await sentSterilizeLockerCommand({
         lockerId: this.lockerId,
@@ -246,11 +261,9 @@ export default {
       return JSON.parse(localStorage.getItem("auth__user"));
     },
     isSterilizing() {
-      return false;
       return this.sterilizing;
     },
     isActionable() {
-      return true;
       if (this.isSterilizing) {
         return false;
       }
