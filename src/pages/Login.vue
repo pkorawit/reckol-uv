@@ -67,16 +67,17 @@ export default {
       recaptchaVerifier: null,
       mode: "PHONE_INPUT",
       confirmationResult: null,
-      loading: false
+      loading: false,
+      formatTel: ""
     };
   },
   methods: {
     async onLogin(response) {
       try {
-        const formatTel = `+66${this.tel.replace("(","").replace(")","").replace("-","").replaceAll(" ","").slice(1,10)}`;    
+        this.formatTel = `+66${this.tel.replace("(","").replace(")","").replace("-","").replaceAll(" ","").slice(1,10)}`;    
         Loading.show();
         this.confirmationResult = await this.$auth().signInWithPhoneNumber(
-          formatTel,
+          this.formatTel,
           this.recaptchaVerifier
         );
         this.mode = "OTP_INPUT";
@@ -90,21 +91,28 @@ export default {
         this.loading = true
         Loading.show();
         const result = await this.confirmationResult.confirm(this.otp);
+        console.log({
+              userId: result.user.uid,
+              phoneNumber: this.formatTel,
+            });
 
         if (result.additionalUserInfo.isNewUser) {
+          
           await Promise.all([
             createUserLockers({
               userId: result.user.uid,
-              phoneNumber: this.tel,
+              phoneNumber: this.formatTel.replace("+66", "0"),
             }),
             createUserProfiles({
               userId: result.user.uid,
-              phoneNumber: this.tel,
+              phoneNumber: this.formatTel.replace("+66", "0"),
             }),
           ]);
         }
 
         localStorage.setItem("auth__user", JSON.stringify(result.user));
+        // Create user_lockers 
+
         Loading.hide();
         this.$router.push("/");
         this.loading = false

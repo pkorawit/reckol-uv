@@ -40,22 +40,36 @@
           {{ new Date().toLocaleTimeString() }}
         </div>
       </div>
-      <div v-if="locker.sharing.isSharing" style="border-radius:15px" class="bg-grey-3 q-mt-sm q-pa-sm">
-      <div class="row text-h6">
-        <div class="col">
-          <q-badge size="lg" align="middle" color="secondary"> Shared to </q-badge>
-         {{ locker.sharing.targetPhoneNumber }}     
+      <div
+        v-if="locker.sharing.isSharing"
+        style="border-radius: 15px"
+        class="bg-grey-3 q-mt-sm q-pa-sm"
+      >
+        <div class="row text-h6">
+          <div class="col">
+            <q-badge size="lg" align="middle" color="secondary">
+              Shared to
+            </q-badge>
+            {{ locker.sharing.targetPhoneNumber }}
+          </div>
+          <div class="col text-right">
+            <q-btn
+              flat
+              color="primary"
+              icon="content_copy"
+              label=""
+              @click="copyShareInfo"
+            />
+          </div>
         </div>
-         <div class="col text-right">
-           <q-btn flat color="primary" icon="content_copy" label="" @click="copyShareInfo" />
+        <div class="row text-h6">
+          <div class="col">
+            <q-badge size="lg" align="middle" color="secondary">
+              One-time passcode
+            </q-badge>
+            {{ locker.onetimeCode }}
+          </div>
         </div>
-      </div>
-      <div class="row text-h6">
-        <div class="col">  
-         <q-badge size="lg" align="middle" color="secondary"> One-time passcode </q-badge>    
-          {{ locker.onetimeCode }}
-        </div>
-      </div>
       </div>
     </div>
     <div v-if="mode === MODE.OTP_UNLOCK" class="information q-pa-md q-mb-xl">
@@ -109,7 +123,7 @@
               color="negative"
               label="cancel share"
               unelevated
-              @click="cancelShareLocker"
+              @click="confirmCancelShare = true"
               style="font-size: 20px"
               :class="`${actionBtnClass}`"
             />
@@ -144,6 +158,31 @@
         />
       </div>
     </div>
+    <q-dialog v-model="confirmCancelShare" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar
+            icon="cancel_presentation"
+            color="negative"
+            text-color="white"
+          />
+          <span class="q-ml-sm"
+            >Confirm to cancel share locker {{ this.lockerId }} ?</span
+          >
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Cancel" color="primary" v-close-popup />
+          <q-btn
+            flat
+            label="Confirm"
+            color="primary"
+            @click="cancelShareLocker"
+            v-close-popup
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <q-dialog v-model="confirm" persistent>
       <q-card>
         <q-card-section class="row items-center">
@@ -184,7 +223,7 @@ import {
   startHealthCheckSubscription,
   onHealthChanges,
 } from "src/api/collections/health-check";
-import { copyToClipboard } from 'quasar'
+import { copyToClipboard } from "quasar";
 
 export default {
   data() {
@@ -194,6 +233,7 @@ export default {
       setting: null,
       isHealthy: false,
       confirm: false,
+      confirmCancelShare: false,
     };
   },
   methods: {
@@ -210,8 +250,8 @@ export default {
         id: this.lockerId,
       };
     },
-    copyShareInfo(){
-      const shareInfo = `Locker No: ${this.lockerId}\nPasscode: ${this.locker.onetimeCode}\n`
+    copyShareInfo() {
+      const shareInfo = `Locker No: ${this.lockerId}\nPasscode: ${this.locker.onetimeCode}\n`;
       copyToClipboard(shareInfo);
     },
     openSendOneTimeCodeDialog() {
@@ -267,21 +307,10 @@ export default {
       });
     },
     async cancelShareLocker() {
-      const isConfirmed = confirm(`Cancel share locker ${this.lockerId}`);
-      if (!isConfirmed) {
-        return;
-      }
       await cancelShareLocker({ locker: this.locker });
-      this.$q
-        .dialog({
-          title: "Success",
-          message: "Share locker success.",
-        })
-        .onDismiss(() =>
-          this.$router.push({
-            path: `/`,
-          })
-        );
+      this.$router.push({
+        path: `/`,
+      });
     },
   },
   computed: {
