@@ -11,7 +11,7 @@
         mask="(###) ### - ####"
         hint="ex. (098)-xxx-xxxx"
         v-model="tel"
-        input-style="text-align:center;"
+        input-style="text-align:center;font-size:20px"
         color="secondary"
         label="กรอกเบอร์โทรศัพท์เพื่อรับ OTP"
         autofocus
@@ -38,7 +38,7 @@
         type="number"
         hint="ex. xxxxxx"
         v-model="otp"
-        input-style="text-align:center;"
+        input-style="text-align:center;font-size:20px"
         color="secondary"
         label="กรอก OTP ที่ได้รับ"
         autofocus

@@ -278,6 +278,7 @@ export default {
         targetPhoneNumber,
       });
       if (error) {
+        console.log(error.message);
         return this.$q.dialog({
           title: "Error",
           message: "Can't share locker please contact operator.",
@@ -341,7 +342,6 @@ export default {
       return true;
     },
     isDisable() {
-      return false;
       if (this.isSterilizing) {
         return true;
       }
