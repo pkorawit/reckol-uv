@@ -4,11 +4,18 @@
       <q-icon color="negative" name="fas fa-cube" size="xl" />
       {{ lockerId }}
     </div>
-    <div v-if="mode === MODE.RENTAL" class="information q-pa-md q-ma-md bg-white text-h6">
+    <div
+      v-if="mode === MODE.RENTAL"
+      class="information q-pa-md q-ma-md bg-white text-h6"
+    >
       <ul>
         <li>ฝากสัมภาระได้สูงสุด 1 วัน</li>
-        <li>สัมภาระต้องสงสัยจะถูกตรวจสอบโดยไม่ต้องแจ้งให้ทางผู้ใช้บริการทราบล่วงหน้า</li>
-        <li>ไม่อนุญาติให้ฝากหรือจัดเก็บ สัมภาระอันตราย หรือของผิดกฎหมายทุกชนิด</li>
+        <li>
+          สัมภาระต้องสงสัยจะถูกตรวจสอบโดยไม่ต้องแจ้งให้ทางผู้ใช้บริการทราบล่วงหน้า
+        </li>
+        <li>
+          ไม่อนุญาติให้ฝากหรือจัดเก็บ สัมภาระอันตราย หรือของผิดกฎหมายทุกชนิด
+        </li>
         <li>ไม่รับผิดชอบต่อสัมภาระที่สูญหาย หรือสิ่งของมีค่าใดๆ ที่นำมาฝาก</li>
       </ul>
     </div>
@@ -33,12 +40,23 @@
           {{ new Date().toLocaleTimeString() }}
         </div>
       </div>
-      <p v-if="locker.sharing.isSharing">
-        แชร์ไปยัง: {{ locker.sharing.targetPhoneNumber }}
-      </p>
-      <p v-if="locker.sharing.isSharing">
-        รหัสการแชร์: {{ locker.onetimeCode }}
-      </p>
+      <div v-if="locker.sharing.isSharing" style="border-radius:15px" class="bg-grey-3 q-mt-sm q-pa-sm">
+      <div class="row text-h6">
+        <div class="col">
+          <q-badge size="lg" align="middle" color="secondary"> Shared to </q-badge>
+         {{ locker.sharing.targetPhoneNumber }}     
+        </div>
+         <div class="col text-right">
+           <q-btn flat color="primary" icon="content_copy" label="" @click="copyShareInfo" />
+        </div>
+      </div>
+      <div class="row text-h6">
+        <div class="col">  
+         <q-badge size="lg" align="middle" color="secondary"> One-time passcode </q-badge>    
+          {{ locker.onetimeCode }}
+        </div>
+      </div>
+      </div>
     </div>
     <div v-if="mode === MODE.OTP_UNLOCK" class="information q-pa-md q-mb-xl">
       <p>ผู้แชร์: {{ locker.ownner }}</p>
@@ -111,29 +129,43 @@
           :class="`${actionBtnClass}`"
         />
       </div>
-      <div v-if="mode === MODE.RENTAL" class="my-locker flex justify-around q-ma-md">
+      <div
+        v-if="mode === MODE.RENTAL"
+        class="my-locker flex justify-around q-ma-md"
+      >
         <q-btn
           :disable="isDisable"
           :color="actionBtnColor"
           label="Rent"
           icon="fact_check"
-          
           unelevated
           :to="`/input-passcode?mode=${MODE.RENTAL}&lockerId=${lockerId}`"
           :class="`${actionBtnClass}`"
         />
       </div>
     </div>
-     <q-dialog v-model="confirm" persistent>
+    <q-dialog v-model="confirm" persistent>
       <q-card>
         <q-card-section class="row items-center">
-          <q-avatar icon="wb_iridescent" color="deep-purple-9" text-color="white" />
-          <span class="q-ml-sm">The sterilization will take about 10 minutes.</span>
+          <q-avatar
+            icon="wb_iridescent"
+            color="deep-purple-9"
+            text-color="white"
+          />
+          <span class="q-ml-sm"
+            >The sterilization will take about 10 minutes.</span
+          >
         </q-card-section>
 
         <q-card-actions align="right">
           <q-btn flat label="Cancel" color="primary" v-close-popup />
-          <q-btn flat label="Start" color="primary" @click="sterilize" v-close-popup />
+          <q-btn
+            flat
+            label="Start"
+            color="primary"
+            @click="sterilize"
+            v-close-popup
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -152,6 +184,7 @@ import {
   startHealthCheckSubscription,
   onHealthChanges,
 } from "src/api/collections/health-check";
+import { copyToClipboard } from 'quasar'
 
 export default {
   data() {
@@ -160,7 +193,7 @@ export default {
       sterilizing: false,
       setting: null,
       isHealthy: false,
-      confirm: false
+      confirm: false,
     };
   },
   methods: {
@@ -177,10 +210,14 @@ export default {
         id: this.lockerId,
       };
     },
+    copyShareInfo(){
+      const shareInfo = `Locker No: ${this.lockerId}\nPasscode: ${this.locker.onetimeCode}\n`
+      copyToClipboard(shareInfo);
+    },
     openSendOneTimeCodeDialog() {
       this.$q
         .dialog({
-          title: `Share [${ this.lockerId }]  to...`,
+          title: `Share [${this.lockerId}]  to...`,
           message: "Input the phone number",
           prompt: {
             model: "",
@@ -207,15 +244,15 @@ export default {
         });
       }
       await this.fetchLocker();
-      this.onSent();
+      this.onSent(targetPhoneNumber);
     },
     onSent() {
       this.$q.dialog({
         title: "Success",
-        message: "Share locker success.",
+        message: `The locker has shared to ${targetPhoneNumber}`,
       });
     },
-    confirmSterilize(){
+    confirmSterilize() {
       this.confirm = true;
     },
     async sterilize() {
