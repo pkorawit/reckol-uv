@@ -13,12 +13,13 @@
         v-model="tel"
         input-style="text-align:center;font-size:20px"
         color="secondary"
-        label="กรอกเบอร์โทรศัพท์เพื่อรับ OTP"
+        label="Sign in with your phone number"
         autofocus
       ></q-input>
       <q-btn
         color="secondary"
-        label="next"
+        label="Request OTP"
+        icon="textsms"
         class="full-width q-mt-md"
         @click="renderRecaptcha"
         :loading="loading"
@@ -39,13 +40,15 @@
         hint="ex. xxxxxx"
         v-model="otp"
         input-style="text-align:center;font-size:20px"
-        color="secondary"
-        label="กรอก OTP ที่ได้รับ"
+        color="negative"
+        label="Check yor phone and enter the OTP"
         autofocus
+        ref="otp"
       ></q-input>
       <q-btn
-        color="secondary"
+        color="negative"
         label="Sign In"
+        icon="login"
         class="full-width q-mt-md"
         @click="confirmOTP"
         :loading="loading"
@@ -56,7 +59,7 @@
 
 <script>
 import { Loading } from "quasar";
-import { createUserLockers } from "../api/collections/user-lockers-collection";
+import { createUserLockers, isUserLockersExists } from "../api/collections/user-lockers-collection";
 import { createUserProfiles } from "../api/collections/user-profiles-collection";
 
 export default {
@@ -74,7 +77,7 @@ export default {
   methods: {
     async onLogin(response) {
       try {
-        this.formatTel = `+66${this.tel.replace("(","").replace(")","").replace("-","").replaceAll(" ","").slice(1,10)}`;    
+        this.formatTel = `+66${this.tel.replace("(","").replace(")","").replace("-","").replaceAll(" ","").slice(1,10)}`;              
         Loading.show();
         this.confirmationResult = await this.$auth().signInWithPhoneNumber(
           this.formatTel,
@@ -95,9 +98,10 @@ export default {
               userId: result.user.uid,
               phoneNumber: this.formatTel,
             });
-
-        if (result.additionalUserInfo.isNewUser) {
-          
+        
+        // Create user locker collection & profile collection if it not exists
+        const userLockerExist = await isUserLockersExists({phoneNumber: this.formatTel.replace("+66", "0")})      
+        if (!userLockerExist) {         
           await Promise.all([
             createUserLockers({
               userId: result.user.uid,

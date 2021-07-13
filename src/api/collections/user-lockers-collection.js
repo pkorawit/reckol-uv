@@ -9,6 +9,16 @@ export const createUserLockers = async ({ userId, phoneNumber }) => await userLo
     shareLockers: []
 })
 
+export const isUserLockersExists = async ({ phoneNumber }) => {
+    const doc = await userLockersCollection.doc(phoneNumber).get()   
+    if (doc.exists) {
+        return true
+    } else {
+        return false
+    }
+}
+
+
 export const addSelfLocker = async ({ userId, locker }) => await userLockersCollection.doc(userId).update({
     myLockers: firestore.FieldValue.arrayUnion({
         createdAt: new Date(),

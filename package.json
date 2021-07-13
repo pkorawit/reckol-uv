@@ -8,7 +8,8 @@
   "scripts": {
     "test": "echo \"No test specified\" && exit 0",
     "build": "quasar build -m pwa",
-    "dev": "quasar dev"
+    "dev": "quasar dev",
+    "deploy": "quasar build -m pwa && firebase deploy --only hosting"
   },
   "dependencies": {
     "@babel/core": "^7.12.3",
