@@ -4,6 +4,10 @@
       <q-icon color="negative" name="fas fa-cube" size="xl" />
       {{ lockerId }}
     </div>
+    <div class="name text-bold text-deep-purple" v-if="isSterilizing">
+      <q-spinner-rings color="deep-purple-9" style="font-size: 2.5em" /><br />
+      Sterilizing will finish in <span class="text-negative">{{ this.countDown }}</span> minutes
+    </div>
     <div
       v-if="mode === MODE.RENTAL"
       class="information q-pa-md q-ma-md bg-white text-h6"
@@ -224,16 +228,19 @@ import {
   onHealthChanges,
 } from "src/api/collections/health-check";
 import { copyToClipboard } from "quasar";
+import { date } from "quasar";
 
 export default {
   data() {
     return {
       locker: null,
       sterilizing: false,
+      sterilizingTimeEnd: null,
       setting: null,
       isHealthy: false,
       confirm: false,
       confirmCancelShare: false,
+      countDown: 0,
     };
   },
   methods: {
@@ -245,6 +252,19 @@ export default {
         lockerId: this.lockerId,
       });
       this.sterilizing = sterilizeStatus.data().sterilizeStatus;
+      if (this.sterilizing) {
+        this.sterilizingTimeEnd = date.addToDate(
+          new Date(sterilizeStatus.data().timeStamp),
+          { minutes: 10 }
+        );
+        this.countDown = date.getDateDiff(
+          this.sterilizingTimeEnd,
+          new Date(),
+          "minutes"
+        );
+        this.countDownSterilizeTime();
+        console.log("🚀 ~ fetchLocker ~ this.countDown", this.countDown);
+      }
       this.locker = {
         ...locker.data(),
         id: this.lockerId,
@@ -312,6 +332,17 @@ export default {
       this.$router.push({
         path: `/`,
       });
+    },
+    formatDate(dateInput) {
+      const timeStamp = Date.parse(dateInput);
+      return date.formatDate(timeStamp, "DD-MMM-YYYY THH:mm");
+    },
+    countDownSterilizeTime() {
+      if (this.countDown > 0) {
+        setTimeout(() => {
+          this.countDown -= 1;
+        }, 1000 * 60);
+      }
     },
   },
   computed: {

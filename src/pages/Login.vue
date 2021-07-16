@@ -41,7 +41,7 @@
         v-model="otp"
         input-style="text-align:center;font-size:20px"
         color="negative"
-        label="Check yor phone and enter the OTP"
+        label="Check your phone and enter the OTP"
         autofocus
         ref="otp"
       ></q-input>
