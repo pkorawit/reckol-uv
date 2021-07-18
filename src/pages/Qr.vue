@@ -1,21 +1,17 @@
 <template>
   <div class="background">
-    <div
-      v-if="loading"
-      class="loading"
-    >
-      <q-spinner
-        class="spinner"
-        color="primary"
-        size="3em"
-      />
+    <div v-if="loading" class="loading">
+      <q-spinner class="spinner" color="primary" size="3em" />
     </div>
     <div>
-      <qrcode-stream
-        @decode="onDecode"
-        @init="onInit"
-        class="qr-scanner"
+      <div
+        class="text-center text-h6"
+        v-if="mode === 'SELF_UNLOCK' || mode === 'OTP_UNLOCK'"
       >
+        Scan QR code of
+        <q-icon color="negative" name="fas fa-cube" size="sm" /> {{ lockerId }}
+      </div>
+      <qrcode-stream @decode="onDecode" @init="onInit" class="qr-scanner">
       </qrcode-stream>
     </div>
   </div>
@@ -58,11 +54,29 @@ export default {
           });
         }
         if (this.mode === MODE.SELF_UNLOCK) {
+          if (lockerId != this.lockerId) {
+            Dialog.create({
+              title: "Warning",
+              message: "Invalid locker number",
+            });
+            return this.$router.push({
+              path: `/`,
+            });
+          }
           this.$router.push({
             path: `/input-passcode?mode=${this.mode}&lockerId=${lockerId}`,
           });
         }
         if (this.mode === MODE.OTP_UNLOCK) {
+          if (lockerId != this.lockerId) {
+            Dialog.create({
+              title: "Warning",
+              message: "Invalid locker number",
+            });
+            return this.$router.push({
+              path: `/`,
+            });
+          }
           this.$router.push({
             path: `/input-passcode?mode=${this.mode}&lockerId=${lockerId}`,
           });

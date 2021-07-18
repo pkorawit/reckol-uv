@@ -1,5 +1,5 @@
 <template>
-  <div class="detail">
+  <div class="detail" v-if="locker">
     <div class="name text-h4 q-mb-md">
       <q-icon color="negative" name="fas fa-cube" size="xl" />
       {{ lockerId }}
@@ -196,7 +196,7 @@
             text-color="white"
           />
           <span class="q-ml-sm"
-            >The sterilization will take about 10 minutes.</span
+            >The sterilization will take about 5 minutes.</span
           >
         </q-card-section>
 
@@ -255,7 +255,7 @@ export default {
       if (this.sterilizing) {
         this.sterilizingTimeEnd = date.addToDate(
           new Date(sterilizeStatus.data().timeStamp),
-          { minutes: 10 }
+          { minutes: 5 }
         );
         this.countDown = date.getDateDiff(
           this.sterilizingTimeEnd,

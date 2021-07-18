@@ -24,7 +24,8 @@ export default {
   },
   methods: {
     detail() {
-      this.$router.push(`/detail?mode=${this.mode}&lockerId=${this.locker?.id}`);
+      const path = `/detail?mode=${this.mode}&lockerId=${this.locker?.id}`
+      if (this.$route.path !== path) this.$router.push(path)
     },
   },
   computed: {

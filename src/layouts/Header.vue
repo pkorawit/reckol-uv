@@ -5,14 +5,25 @@
         <img alt="logo" src="~assets/uvbox2.png" width="50%" />
       </div>
       <div class="text-h5 info">
-        <q-icon color="primary" name="info" size="42px"> </q-icon>
+        <q-icon color="primary" name="info" size="42px" @click="showInfo">
+        </q-icon>
       </div>
     </div>
   </q-header>
 </template>
 
 <script>
-export default {};
+import { Dialog, Loading } from "quasar";
+export default {
+  methods: {
+    showInfo() {
+      Dialog.create({
+        title: "Information",
+        message: "CoC UV Locker version 1.0.2",
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -28,6 +39,6 @@ export default {};
 }
 
 .bg-gray-custom {
-  background-color: #F5F5F5;  
+  background-color: #f5f5f5;
 }
 </style>

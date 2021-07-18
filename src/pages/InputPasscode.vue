@@ -56,7 +56,6 @@ export default {
 
         if (this.mode == MODE.SELF_UNLOCK) {
           const { masterCode } = (await getLockerState({ lockerId: this.lockerId })).data()
-          console.log(masterCode);
           isSucceed = await unlockSelfLocker({
             lockerId: this.lockerId,
             passcode: masterCode,
